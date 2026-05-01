@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRB Compliance Report — {{ image }}</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white; padding: 40px;
+    border-bottom: 4px solid #e94560;
+  }
+  .header h1 { font-size: 1.8em; margin-bottom: 8px; }
+  .header .subtitle { opacity: 0.8; font-size: 0.95em; }
+  .header .meta { margin-top: 15px; opacity: 0.7; font-size: 0.85em; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+  /* Score Card */
+  .score-section {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 25px; margin-bottom: 30px;
+  }
+  .score-card {
+    background: white; border-radius: 16px;
+    padding: 35px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .score-number {
+    font-size: 4.5em; font-weight: 700; line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-label { font-size: 0.95em; color: #666; margin-bottom: 15px; }
+  .score-badge {
+    display: inline-block; padding: 6px 18px;
+    border-radius: 20px; font-weight: 600; font-size: 0.9em;
+  }
+  .score-red    { color: #e74c3c; }
+  .score-amber  { color: #f39c12; }
+  .score-green  { color: #27ae60; }
+  .badge-red    { background: #fdecea; color: #e74c3c; }
+  .badge-amber  { background: #fef9e7; color: #f39c12; }
+  .badge-green  { background: #eafaf1; color: #27ae60; }
+
+  /* CVE Stats */
+  .cve-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  .cve-card {
+    background: white; border-radius: 12px;
+    padding: 20px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .cve-card .count { font-size: 2.5em; font-weight: 700; }
+  .cve-card .label { font-size: 0.8em; color: #666; margin-top: 4px; }
+  .cve-critical { border-top: 4px solid #e74c3c; }
+  .cve-high     { border-top: 4px solid #e67e22; }
+  .cve-medium   { border-top: 4px solid #f1c40f; }
+  .cve-low      { border-top: 4px solid #2ecc71; }
+  .cve-critical .count { color: #e74c3c; }
+  .cve-high     .count { color: #e67e22; }
+  .cve-medium   .count { color: #f1c40f; }
+  .cve-low      .count { color: #2ecc71; }
+
+  /* Section headings */
+  .section { margin-bottom: 30px; }
+  .section-title {
+    font-size: 1.2em; font-weight: 700;
+    margin-bottom: 15px; padding-bottom: 10px;
+    border-bottom: 2px solid #e94560;
+    color: #1a1a2e;
+  }
+
+  /* NRB Controls Table */
+  .controls-table {
+    width: 100%; border-collapse: collapse;
+    background: white; border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .controls-table th {
+    background: #1a1a2e; color: white;
+    padding: 14px 16px; text-align: left;
+    font-size: 0.85em; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .controls-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f2f5;
+    font-size: 0.9em; vertical-align: top;
+  }
+  .controls-table tr:last-child td { border-bottom: none; }
+  .controls-table tr:hover td { background: #f8f9ff; }
+
+  .status-pass {
+    display: inline-block; padding: 4px 12px;
+    background: #eafaf1; color: #27ae60;
+    border-radius: 20px; font-weight: 600; font-size: 0.85em;
+  }
+  .status-fail {
+    display: inline-block; padding: 4px 12px;
+    background: #fdecea; color: #e74c3c;
+    border-radius: 20px; font-weight: 600; font-size: 0.85em;
+  }
+  .weight-badge {
+    display: inline-block; padding: 3px 10px;
+    background: #eef2ff; color: #4a6cf7;
+    border-radius: 10px; font-size: 0.8em; font-weight: 600;
+  }
+  .violation-tag {
+    display: inline-block; padding: 2px 8px;
+    background: #fff3cd; color: #856404;
+    border-radius: 6px; font-size: 0.78em;
+    margin: 2px; font-family: monospace;
+  }
+
+  /* AI Advisories */
+  .advisory-card {
+    background: white; border-radius: 12px;
+    margin-bottom: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-left: 5px solid #e94560;
+  }
+  .advisory-header {
+    background: #f8f9ff; padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .advisory-header .clause {
+    font-weight: 600; color: #1a1a2e; font-size: 0.95em;
+  }
+  .advisory-header .doc-badge {
+    font-size: 0.78em; padding: 3px 10px;
+    background: #e8eaf6; color: #3949ab;
+    border-radius: 10px;
+  }
+  .advisory-body { padding: 20px; }
+  .advisory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; margin-top: 15px;
+  }
+  .advisory-item h4 {
+    font-size: 0.8em; text-transform: uppercase;
+    color: #888; margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .advisory-item p { font-size: 0.9em; color: #333; line-height: 1.5; }
+  .code-block {
+    background: #1a1a2e; color: #a8ff78;
+    padding: 12px 16px; border-radius: 8px;
+    font-family: monospace; font-size: 0.85em;
+    white-space: pre-wrap; margin-top: 6px;
+  }
+  .risk-box {
+    background: #fdecea; border-radius: 8px;
+    padding: 12px 16px; margin-top: 6px;
+    font-size: 0.88em; color: #c0392b; line-height: 1.5;
+  }
+
+  /* Executive Narrative */
+  .narrative-box {
+    background: white; border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    line-height: 1.8; font-size: 0.95em; color: #333;
+    white-space: pre-wrap;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 30px;
+    color: #999; font-size: 0.85em;
+    border-top: 1px solid #e0e0e0; margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>NRB Container Compliance Report</h1>
+  <div class="subtitle">Nepal Rastra Bank ICT Security Guidelines — Container Image Assessment</div>
+  <div class="meta">
+    Image: <strong>{{ image }}</strong> &nbsp;|&nbsp;
+    Scanned: <strong>{{ scan_time }}</strong>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SCORE + CVE SUMMARY -->
+  <div class="score-section">
+
+    <!-- Compliance Score -->
+    <div class="score-card">
+      {% set score = nrb_compliance.compliance_score %}
+      {% if score >= 80 %}
+        <div class="score-number score-green">{{ score }}%</div>
+        <div class="score-label">NRB Compliance Score</div>
+        <span class="score-badge badge-green">COMPLIANT</span>
+      {% elif score >= 50 %}
+        <div class="score-number score-amber">{{ score }}%</div>
+        <div class="score-label">NRB Compliance Score</div>
+        <span class="score-badge badge-amber">PARTIAL</span>
+      {% else %}
+        <div class="score-number score-red">{{ score }}%</div>
+        <div class="score-label">NRB Compliance Score</div>
+        <span class="score-badge badge-red">NON-COMPLIANT</span>
+      {% endif %}
+    </div>
+
+    <!-- CVE Counts -->
+    <div class="cve-grid">
+      <div class="cve-card cve-critical">
+        <div class="count">{{ cve_counts.CRITICAL }}</div>
+        <div class="label">CRITICAL CVEs</div>
+      </div>
+      <div class="cve-card cve-high">
+        <div class="count">{{ cve_counts.HIGH }}</div>
+        <div class="label">HIGH CVEs</div>
+      </div>
+      <div class="cve-card cve-medium">
+        <div class="count">{{ cve_counts.MEDIUM }}</div>
+        <div class="label">MEDIUM CVEs</div>
+      </div>
+      <div class="cve-card cve-low">
+        <div class="count">{{ cve_counts.LOW }}</div>
+        <div class="label">LOW CVEs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NRB CONTROLS TABLE -->
+  <div class="section">
+    <div class="section-title">NRB Control Compliance Status</div>
+    <table class="controls-table">
+      <thead>
+        <tr>
+          <th>Control ID</th>
+          <th>NRB Clause</th>
+          <th>Document</th>
+          <th>Status</th>
+          <th>Weight</th>
+          <th>Violations Found</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for control in nrb_compliance.controls %}
+        <tr>
+          <td><strong>{{ control.id }}</strong></td>
+          <td>{{ control.nrb_clause }}</td>
+          <td><small>{{ control.nrb_document }}</small></td>
+          <td>
+            {% if control.compliant %}
+              <span class="status-pass">PASS</span>
+            {% else %}
+              <span class="status-fail">FAIL</span>
+            {% endif %}
+          </td>
+          <td><span class="weight-badge">{{ control.severity_weight }}/10</span></td>
+          <td>
+            {% for v in control.violations %}
+              <span class="violation-tag">{{ v }}</span>
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AI REMEDIATION ADVISORIES -->
+  {% if ai_advisories %}
+  <div class="section">
+    <div class="section-title">AI-Generated Remediation Advisories</div>
+    {% for item in ai_advisories %}
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">{{ item.nrb_id }} — {{ item.nrb_clause }}</span>
+        <span class="doc-badge">{{ item.nrb_document }}</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>{{ item.violation }}</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>{{ item.advisory.immediate_fix }}</p>
+            <div class="code-block">{{ item.advisory.code_example }}</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>{{ item.advisory.nrb_justification }}</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">{{ item.advisory.risk_if_ignored }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- AI EXECUTIVE NARRATIVE -->
+  {% if ai_narrative %}
+  <div class="section">
+    <div class="section-title">AI Executive Compliance Narrative</div>
+    <div class="narrative-box">{{ ai_narrative }}</div>
+  </div>
+  {% endif %}
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  NRB Container Compliance Pipeline &mdash;
+  BSc Cybersecurity and Ethical Hacking Thesis &mdash;
+  Kathmandu, Nepal
+</div>
+
+</body>
+</html>
