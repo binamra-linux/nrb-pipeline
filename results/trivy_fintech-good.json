@@ -3,8 +3,8 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019de25b-c335-7c86-a38a-bd98c0862e7f",
-  "CreatedAt": "2026-05-01T12:50:57.813822267+05:45",
+  "ReportID": "019de2b5-155b-727d-9daf-6761502cddef",
+  "CreatedAt": "2026-05-01T14:28:31.547165752+05:45",
   "ArtifactID": "sha256:c8316162418c5f0f0cabc657633eabefe3797c0bf77dfe7f8cd189d1fd5c3dc4",
   "ArtifactName": "fintech-good",
   "ArtifactType": "container_image",

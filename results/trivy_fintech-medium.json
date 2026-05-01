@@ -3,8 +3,8 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019de25b-89b0-76e8-a50a-9babb26b2190",
-  "CreatedAt": "2026-05-01T12:50:43.088453924+05:45",
+  "ReportID": "019de2b4-56b0-7387-a2a6-9df8290d3b80",
+  "CreatedAt": "2026-05-01T14:27:42.736233767+05:45",
   "ArtifactID": "sha256:0e54151c83f9cc8feeb790279f5f2ca5f1ac45a73f0da0402223f2f44aa006cd",
   "ArtifactName": "fintech-medium",
   "ArtifactType": "container_image",

@@ -189,7 +189,7 @@
   <div class="subtitle">Nepal Rastra Bank ICT Security Guidelines — Container Image Assessment</div>
   <div class="meta">
     Image: <strong>fintech-good</strong> &nbsp;|&nbsp;
-    Scanned: <strong>2026-05-01 12:51:08</strong>
+    Scanned: <strong>2026-05-01 14:29:00</strong>
   </div>
 </div>
 
@@ -439,12 +439,182 @@
 
   <!-- AI REMEDIATION ADVISORIES -->
   
+  <div class="section">
+    <div class="section-title">AI-Generated Remediation Advisories</div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-001 — Section 6.4 - Patch Management</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_high_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Update the base image to a currently supported version and pin to a specific tag.</p>
+            <div class="code-block">FROM alpine:3.18
+# or FROM ubuntu:22.04</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>Using a current and supported base image ensures all its components are patched and do not include end-of-life software, thus complying with Section 6.4.</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Deployment of vulnerable base images could lead to exploitation of known critical CVEs, potentially compromising customer data and financial transactions handled by the fintech platform, resulting in regulatory penalties and loss of trust.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-002 — Section 6.5 - Vulnerability Assessment</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_medium_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Update the base image and ensure all packages are up-to-date before building the image.</p>
+            <div class="code-block">FROM your-base-image:latest
+RUN apt-get update && apt-get upgrade -y</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>This action directly addresses the requirement for regular vulnerability assessments and remediation by upgrading packages to include available fixes for detected CVEs.</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">An unpatched vulnerability could be exploited to compromise customer financial data, disrupt payment processing, or lead to fraudulent transactions, directly impacting the integrity and trust of the fintech service in Nepal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-002 — Section 6.5 - Vulnerability Assessment</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_unfixed_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Add a command to update and upgrade all packages in the Dockerfile before installing application dependencies.</p>
+            <div class="code-block">RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>This change ensures that the base image is updated to include security patches for known vulnerabilities, directly addressing the requirement for regular vulnerability assessment and remediation.</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Unpatched vulnerabilities could be exploited by attackers to gain unauthorized access to sensitive customer financial data (e.g., bank account details, transaction history) or disrupt payment processing services, leading to financial losses and reputational damage within Nepal's payment ecosystem.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-010 — Section 4.4 - Technology Risk</span>
+        <span class="doc-badge">Risk Management Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_os_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Add a command to update and upgrade packages at the beginning of the Dockerfile and specify a package version when installing a potentially vulnerable library.</p>
+            <div class="code-block">RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get install -y --no-install-recommends your-package-name=1.2.3</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>Regularly updating packages and pinning specific, known-good versions directly addresses the identification and management of risks from outdated libraries and open-source components.</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">An unpatched vulnerability in a payment processing library could allow attackers to intercept or manipulate financial transactions, leading to customer data breaches, financial fraud, and severe reputational damage for the fintech startup.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
 
   <!-- AI EXECUTIVE NARRATIVE -->
   
   <div class="section">
     <div class="section-title">AI Executive Compliance Narrative</div>
-    <div class="narrative-box">Executive report could not be generated. Please check API key and connectivity.</div>
+    <div class="narrative-box">**Formal Security Assessment Report: Fintech Container Image**
+
+**Date:** October 26, 2023
+**To:** [Recipient Name/Department, e.g., Head of Engineering, CTO]
+**From:** [Your Name], Compliance Officer
+**Subject:** Security Assessment of `fintech-good` Container Image
+
+---
+
+**1. Executive Summary**
+
+This assessment of the `fintech-good` container image reveals a mixed security posture. While several critical security controls are met, significant vulnerabilities exist that pose a substantial risk to our payment processing operations and customer data. Therefore, this image is not currently safe for deployment in a production environment handling sensitive financial transactions.
+
+**2. Compliance Status**
+
+The `fintech-good` container image has demonstrated compliance with several key Nepal Rastra Bank (NRB) regulatory clauses, including:
+
+*   **Passed Controls:**
+    *   Section 5.1 - Access Control and Least Privilege
+    *   Section 5.3 - Privileged Account Management
+    *   Section 7.1 - Network Security
+    *   Section 4.2 - Secure Communication
+    *   Section 3.1 - Credential Management
+    *   Section 5.6 - Cryptographic Controls
+    *   Section 9.2 - Third Party and Supply Chain Risk
+    *   Section 8.1 - Audit Logging and Monitoring
+    *   Section 6.2 - Secure Configuration Management
+
+However, the following NRB clauses have been identified as failing and require immediate attention:
+
+*   **Failed Controls:**
+    *   Section 6.4 - Patch Management
+    *   Section 6.5 - Vulnerability Assessment
+    *   Section 4.4 - Technology Risk
+
+The overall compliance score of 75.8%, with 0 critical CVEs but 6 high and 34 medium CVEs, further indicates a need for remediation before deployment.
+
+**3. Key Risk Areas**
+
+From a business perspective, the identified risks in the `fintech-good` container image could have severe consequences for our Nepali payment processing operations:
+
+*   **Unpatched Vulnerabilities (Section 6.4 - Patch Management, Section 6.5 - Vulnerability Assessment):** The presence of 6 high and 34 medium severity vulnerabilities means that known weaknesses in the software components of this image are exposed. For a payment processing company, this is akin to leaving doors unlocked. Attackers could exploit these weaknesses to gain unauthorized access, steal sensitive customer financial data (like card numbers and transaction details), or disrupt our services. This could lead to significant financial losses due to fraud, regulatory fines from NRB, and severe reputational damage that erodes customer trust.
+*   **Inherent Technology Risks (Section 4.4 - Technology Risk):** The failure to adequately address technology risk suggests that the underlying technology choices or configurations within the container may not be robust enough to withstand evolving cyber threats. This could manifest as system instability, susceptibility to new attack vectors, or an inability to adapt to security advancements, all of which are critical for maintaining a secure and reliable payment processing platform.
+
+**4. Recommended Actions**
+
+The following prioritized actions are recommended to bring the `fintech-good` container image into compliance and mitigate identified risks:
+
+1.  **Address High Severity Vulnerabilities (Critical Priority):**
+    *   **Action:** Immediately patch or upgrade all software packages within the container image that contain the 6 identified high severity CVEs. Consult the scan report for specific CVE identifiers and the affected packages.
+    *   **Rationale:** High severity vulnerabilities are often actively exploited by attackers and present an immediate threat to data confidentiality, integrity, and system availability.
+
+2.  **Remediate Medium Severity Vulnerabilities (High Priority):**
+    *   **Action:** Investigate and address the 34 identified medium severity CVEs. Prioritize remediation based on the potential impact and exploitability of each vulnerability. This may involve patching, configuration changes, or replacing vulnerable components.
+    *   **Rationale:** While not as immediately critical as high severity issues, medium severity vulnerabilities can be chained together by attackers or exploited in specific scenarios, contributing to a larger security breach.
+
+3.  **Implement Robust Patch Management (Critical Priority):**
+    *   **Action:** Establish and document a formal patch management process that aligns with **Section 6.4 - Patch Management**. This process should include regular scanning for new vulnerabilities, a defined timeline for applying patches, and a testing procedure before deploying patches to production.
+    *   **Rationale:** Proactive and consistent patching is a cornerstone of cybersecurity and essential for maintaining compliance with NRB requirements, preventing the accumulation of exploitable vulnerabilities.
+
+4.  **Establish Regular Vulnerability Assessment (Critical Priority):**
+    *   **Action:** Implement a scheduled vulnerability assessment program that meets the requirements of **Section 6.5 - Vulnerability Assessment**. This includes regularly scanning container images and running systems for known vulnerabilities.
+    *   **Rationale:** Continuous vulnerability assessment ensures that new threats are identified promptly and that the security posture of our systems is regularly validated.
+
+5.  **Review and Mitigate Technology Risks (High Priority):**
+    *   **Action:** Conduct a thorough review of the technology stack and configurations within the `fintech-good` container to identify and mitigate inherent risks as per **Section 4.4 - Technology Risk**. This may involve hardening configurations, using more secure versions of libraries, or considering alternative technologies if significant risks are identified.
+    *   **Rationale:** Ensuring the underlying technology is secure and resilient is fundamental to protecting our payment processing services from sophisticated threats.
+
+**5. Conclusion**
+
+Based on this security assessment, the `fintech-good` container image **does not currently meet NRB requirements** for deployment in a payment processing environment. The significant number of unaddressed vulnerabilities across high and medium severity levels, coupled with the failure to comply with key clauses related to Patch Management, Vulnerability Assessment, and Technology Risk, poses an unacceptable risk to sensitive financial data and the operational integrity of our services. Remediation of the identified issues, as outlined in the Recommended Actions, is mandatory before this image can be considered for production deployment.</div>
   </div>
   
 

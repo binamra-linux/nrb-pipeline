@@ -1,6 +1,6 @@
 {
   "image": "fintech-medium",
-  "scan_time": "2026-05-01 12:50:57",
+  "scan_time": "2026-05-01 14:28:25",
   "cve_counts": {
     "CRITICAL": 6,
     "HIGH": 33,
@@ -321,6 +321,91 @@
       "dockle_CIS-DI-0011": false
     }
   },
-  "ai_advisories": [],
-  "ai_narrative": "Executive report could not be generated. Please check API key and connectivity."
+  "ai_advisories": [
+    {
+      "nrb_id": "NRB-001",
+      "nrb_clause": "Section 6.4 - Patch Management",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_critical_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a currently supported version with all critical CVEs resolved and pin to a specific, non-EOL tag.",
+        "code_example": "FROM ubuntu:22.04\n# ... other instructions ...",
+        "nrb_justification": "Using a current, supported base image ensures all included software components are patched and not end-of-life, directly addressing the NRB's requirement for current software.",
+        "risk_if_ignored": "Deployment of an image with critical vulnerabilities could lead to unauthorized access to sensitive customer payment data, financial fraud, service disruption impacting Nepal's payment ecosystem, and reputational damage to the fintech startup."
+      }
+    },
+    {
+      "nrb_id": "NRB-001",
+      "nrb_clause": "Section 6.4 - Patch Management",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_high_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a currently supported version and pin it to a specific tag.",
+        "code_example": "FROM alpine:3.18.4\nRUN apk update && apk upgrade",
+        "nrb_justification": "Using a current and supported base image ensures all software components are up-to-date and free from end-of-life vulnerabilities, directly fulfilling NRB's requirement for current software.",
+        "risk_if_ignored": "Using outdated base images with unpatched critical vulnerabilities could lead to a data breach of sensitive customer financial information, resulting in regulatory fines, loss of customer trust, and disruption of payment processing services for Nepali citizens."
+      }
+    },
+    {
+      "nrb_id": "NRB-002",
+      "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_medium_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a newer version that includes patched versions of vulnerable packages.",
+        "code_example": "FROM ubuntu:22.04\n# ... rest of your Dockerfile",
+        "nrb_justification": "Updating the base image to a patched version directly addresses the discovered CVEs, fulfilling the requirement for regular vulnerability assessment and remediation by severity.",
+        "risk_if_ignored": "Exploitation of these CVEs could lead to unauthorized access to sensitive customer financial data, service disruption of payment processing, and regulatory penalties from Nepal Rastra Bank."
+      }
+    },
+    {
+      "nrb_id": "NRB-002",
+      "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_unfixed_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a newer version that includes patched versions of vulnerable packages or re-run the build with updated package sources.",
+        "code_example": "FROM ubuntu:22.04\nRUN apt-get update && apt-get upgrade -y && apt-get autoremove -y",
+        "nrb_justification": "This action directly addresses the NRB requirement for regular vulnerability assessments and remediation by upgrading packages to versions that have fixes for identified CVEs.",
+        "risk_if_ignored": "Unpatched vulnerabilities in payment processing systems could be exploited by attackers, leading to unauthorized access to sensitive customer financial data, fraudulent transactions, and potential disruption of payment services, impacting customer trust and regulatory compliance."
+      }
+    },
+    {
+      "nrb_id": "NRB-006",
+      "nrb_clause": "Section 4.2 - Secure Communication",
+      "nrb_document": "Digital Payment Security Guidelines",
+      "violation": "trivy_openssl_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a version that includes patched OpenSSL/libssl libraries or explicitly install/update OpenSSL packages.",
+        "code_example": "FROM ubuntu:22.04\nRUN apt-get update && apt-get install -y --only-upgrade openssl libssl-dev && rm -rf /var/lib/apt/lists/*",
+        "nrb_justification": "Updating OpenSSL and related libraries ensures that all communication protocols relying on them, like TLS, are utilizing the latest security patches, thereby encrypting communication as required by Section 4.2.",
+        "risk_if_ignored": "Sensitive customer financial data (e.g., account numbers, transaction details, personal identification information) transmitted between payment components could be intercepted and compromised by malicious actors, leading to financial fraud, identity theft, and significant reputational damage for the fintech startup."
+      }
+    },
+    {
+      "nrb_id": "NRB-008",
+      "nrb_clause": "Section 5.6 - Cryptographic Controls",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_crypto_cves",
+      "advisory": {
+        "immediate_fix": "Update the base image to a version that includes up-to-date and approved cryptographic libraries, or explicitly install/update crypto libraries to their latest secure versions.",
+        "code_example": "FROM ubuntu:22.04\n# ... other Dockerfile instructions ...\nRUN apt-get update && apt-get install -y --no-install-recommends openssl libssl-dev && rm -rf /var/lib/apt/lists/*",
+        "nrb_justification": "Replacing or updating cryptographic libraries ensures that only strong, approved algorithms are utilized, thereby complying with Section 5.6 of the NRB ICT Security Guidelines.",
+        "risk_if_ignored": "Failure to use strong cryptographic algorithms can lead to vulnerabilities such as weakened encryption of sensitive customer financial data, enabling man-in-the-middle attacks on payment transactions, or allowing unauthorized decryption of payment credentials, resulting in financial fraud and severe reputational damage for the fintech startup."
+      }
+    },
+    {
+      "nrb_id": "NRB-010",
+      "nrb_clause": "Section 4.4 - Technology Risk",
+      "nrb_document": "Risk Management Guidelines",
+      "violation": "trivy_os_cves",
+      "advisory": {
+        "immediate_fix": "Add a RUN command to update and upgrade packages within the Dockerfile before installing any application dependencies.",
+        "code_example": "RUN apt-get update && apt-get upgrade -y --no-install-recommends",
+        "nrb_justification": "This ensures that all OS packages are up-to-date, directly addressing the NRB requirement to manage risks from outdated libraries.",
+        "risk_if_ignored": "Outdated OS packages in a payment processing system could harbor known vulnerabilities, potentially leading to data breaches of sensitive customer financial information or unauthorized financial transactions, causing significant reputational and financial damage."
+      }
+    }
+  ],
+  "ai_narrative": "**Security Assessment Report**\n\n**Date:** October 26, 2023\n\n**Prepared For:** [Fintech Startup Name] Management Team\n\n**Prepared By:** [Your Name/Title], Compliance Officer\n\n**Subject:** Security Assessment of Container Image: `fintech-medium`\n\n---\n\n**1. Executive Summary**\n\nThe automated container image scan of `fintech-medium` reveals significant security weaknesses, with a compliance score of 56.6%. This image is **not safe for deployment** in a production payment processing environment due to a high number of critical and high vulnerabilities, and critical control failures. Immediate remediation is required to mitigate substantial risks to customer data and regulatory compliance.\n\n**2. Compliance Status**\n\nThe `fintech-medium` container image has been assessed against relevant Nepal Rastra Bank (NRB) guidelines.\n\n**Passed Controls:**\n\n*   Section 5.1 - Access Control and Least Privilege\n*   Section 5.3 - Privileged Account Management\n*   Section 7.1 - Network Security\n*   Section 3.1 - Credential Management\n*   Section 9.2 - Third Party and Supply Chain Risk\n*   Section 8.1 - Audit Logging and Monitoring\n*   Section 6.2 - Secure Configuration Management\n\n**Failed Controls:**\n\n*   Section 6.4 - Patch Management\n*   Section 6.5 - Vulnerability Assessment\n*   Section 4.2 - Secure Communication\n*   Section 5.6 - Cryptographic Controls\n*   Section 4.4 - Technology Risk\n\n**3. Key Risk Areas**\n\nThe identified security deficiencies in the `fintech-medium` container image expose the company to considerable business risks, particularly concerning the handling of sensitive customer and financial data.\n\n*   **Data Breaches and Financial Loss:** The numerous unpatched vulnerabilities (indicated by failed **Section 6.4 - Patch Management** and **Section 6.5 - Vulnerability Assessment**) create entry points for attackers. If exploited, this could lead to the compromise of customer personal information, financial details, and transaction history. Such a breach would result in direct financial losses through fraudulent transactions, regulatory fines imposed by NRB, and significant costs associated with incident response and recovery.\n*   **Reputational Damage and Loss of Customer Trust:** For a payment processing company, trust is paramount. A security incident stemming from these vulnerabilities would severely damage our reputation, leading to a loss of customer confidence and ultimately, a decline in business. The NRB places a strong emphasis on protecting customer data, and a failure in this area would reflect poorly on our commitment to these standards.\n*   **Non-Compliance Penalties:** Failing to adhere to NRB regulations, specifically regarding **Section 4.2 - Secure Communication**, **Section 5.6 - Cryptographic Controls**, and **Section 4.4 - Technology Risk**, can result in substantial financial penalties, operational restrictions, and potential revocation of licenses. This not only impacts current operations but also future business growth and expansion plans.\n\n**4. Recommended Actions**\n\nThe following actions are prioritized to address the identified risks and bring the `fintech-medium` container image into compliance with NRB requirements.\n\n1.  **Immediate Patching of Critical and High Vulnerabilities:** Address all 6 critical and 33 high Common Vulnerabilities and Exposures (CVEs) identified in the `fintech-medium` image. This involves updating affected software packages, libraries, and operating system components to their latest secure versions. This directly addresses **Section 6.4 - Patch Management**.\n2.  **Implement a Robust Vulnerability Scanning and Assessment Program:** Establish and maintain regular, automated vulnerability scanning of all deployed container images and infrastructure. This includes setting up a process for timely remediation of identified vulnerabilities, aligning with **Section 6.5 - Vulnerability Assessment**.\n3.  **Enforce Secure Communication Protocols:** Ensure that all data transmitted to, from, and within the container is encrypted using strong, up-to-date cryptographic protocols (e.g., TLS 1.2 or higher). This is crucial for **Section 4.2 - Secure Communication**.\n4.  **Strengthen Cryptographic Controls:** Review and update all cryptographic implementations to ensure they meet current industry best practices and NRB guidelines. This includes secure key management and the use of approved algorithms, fulfilling **Section 5.6 - Cryptographic Controls**.\n5.  **Conduct a Comprehensive Technology Risk Assessment:** Perform a thorough assessment of all technologies used within the container and its associated environment to identify and mitigate any inherent technology risks, as required by **Section 4.4 - Technology Risk**.\n\n**5. Conclusion**\n\nThe `fintech-medium` container image currently **does not meet NRB requirements** for deployment in a payment processing environment. The significant number of critical and high vulnerabilities, coupled with failures in essential security controls such as Patch Management, Vulnerability Assessment, Secure Communication, Cryptographic Controls, and Technology Risk management, presents an unacceptable level of risk. Deployment of this image in its current state would violate NRB regulations and expose the company to severe financial, operational, and reputational damage. Remediation of the recommended actions is mandatory before deployment."
 }
