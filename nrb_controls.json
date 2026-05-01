@@ -1,0 +1,136 @@
+{
+  "controls": [
+    {
+      "id": "NRB-001",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 6.4 - Patch Management",
+      "nrb_description": "All software components must be current. End-of-life software must not be used in production.",
+      "mapped_checks": ["trivy_critical_cves", "trivy_high_cves", "hadolint_DL3007"],
+      "hadolint_codes": ["DL3007"],
+      "dockle_codes": [],
+      "severity_weight": 10,
+      "remediation_hint": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment."
+    },
+    {
+      "id": "NRB-002",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+      "nrb_description": "Regular vulnerability assessments must be conducted and findings remediated by severity.",
+      "mapped_checks": ["trivy_medium_cves", "trivy_unfixed_cves"],
+      "hadolint_codes": [],
+      "dockle_codes": [],
+      "severity_weight": 7,
+      "remediation_hint": "Document all unfixed CVEs with justification. Upgrade packages where fixes are available."
+    },
+    {
+      "id": "NRB-003",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 5.1 - Access Control and Least Privilege",
+      "nrb_description": "No service or process should operate with more permissions than required for its function.",
+      "mapped_checks": ["dockle_CIS-DI-0001", "hadolint_DL3002"],
+      "hadolint_codes": ["DL3002"],
+      "dockle_codes": ["CIS-DI-0001"],
+      "severity_weight": 9,
+      "remediation_hint": "Add a non-root USER instruction in your Dockerfile. Create a dedicated app user with minimal permissions."
+    },
+    {
+      "id": "NRB-004",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 5.3 - Privileged Account Management",
+      "nrb_description": "Privileged access must be tightly controlled and restricted to business need only.",
+      "mapped_checks": ["dockle_CIS-DI-0008", "dockle_CIS-DI-0009"],
+      "hadolint_codes": [],
+      "dockle_codes": ["CIS-DI-0008", "CIS-DI-0009"],
+      "severity_weight": 8,
+      "remediation_hint": "Remove setuid/setgid bits. Avoid adding Linux capabilities. Use --security-opt=no-new-privileges at runtime."
+    },
+    {
+      "id": "NRB-005",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 7.1 - Network Security",
+      "nrb_description": "Unnecessary network services must be disabled. Only required ports should be open.",
+      "mapped_checks": ["hadolint_DL3011", "dockle_CIS-DI-0006"],
+      "hadolint_codes": ["DL3011"],
+      "dockle_codes": ["CIS-DI-0006"],
+      "severity_weight": 8,
+      "remediation_hint": "Remove EXPOSE for ports not required by the application. Never expose port 22 in a container."
+    },
+    {
+      "id": "NRB-006",
+      "nrb_document": "Digital Payment Security Guidelines",
+      "nrb_clause": "Section 4.2 - Secure Communication",
+      "nrb_description": "All communication between payment components must be encrypted. Unencrypted protocols must not be used.",
+      "mapped_checks": ["trivy_openssl_cves", "trivy_libssl_cves"],
+      "hadolint_codes": [],
+      "dockle_codes": [],
+      "severity_weight": 10,
+      "remediation_hint": "Ensure OpenSSL and TLS libraries are fully patched. Use a base image with current libssl."
+    },
+    {
+      "id": "NRB-007",
+      "nrb_document": "Digital Payment Security Guidelines",
+      "nrb_clause": "Section 3.1 - Credential Management",
+      "nrb_description": "Credentials, API keys, and cryptographic keys must not be hardcoded in source code or config files.",
+      "mapped_checks": ["hadolint_DL3010", "hadolint_DL3025"],
+      "hadolint_codes": ["DL3010", "DL3025"],
+      "dockle_codes": [],
+      "severity_weight": 10,
+      "remediation_hint": "Remove all ENV instructions containing credentials. Use Docker secrets or a vault solution at runtime."
+    },
+    {
+      "id": "NRB-008",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 5.6 - Cryptographic Controls",
+      "nrb_description": "Strong approved cryptographic algorithms must be used. Deprecated algorithms must not be used.",
+      "mapped_checks": ["trivy_crypto_cves"],
+      "hadolint_codes": [],
+      "dockle_codes": [],
+      "severity_weight": 9,
+      "remediation_hint": "Audit all cryptographic dependencies. Upgrade to current versions of all crypto libraries."
+    },
+    {
+      "id": "NRB-009",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 9.2 - Third Party and Supply Chain Risk",
+      "nrb_description": "Risks from third-party software components and vendor-supplied systems must be assessed and managed.",
+      "mapped_checks": ["dockle_CIS-DI-0005", "hadolint_DL3006"],
+      "hadolint_codes": ["DL3006"],
+      "dockle_codes": ["CIS-DI-0005"],
+      "severity_weight": 8,
+      "remediation_hint": "Use official verified base images only. Pin base image to a specific digest not just a tag."
+    },
+    {
+      "id": "NRB-010",
+      "nrb_document": "Risk Management Guidelines",
+      "nrb_clause": "Section 4.4 - Technology Risk",
+      "nrb_description": "Risks from open-source components, outdated libraries, and unverified software must be identified and managed.",
+      "mapped_checks": ["trivy_os_cves", "trivy_library_cves"],
+      "hadolint_codes": [],
+      "dockle_codes": [],
+      "severity_weight": 7,
+      "remediation_hint": "Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages."
+    },
+    {
+      "id": "NRB-011",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 8.1 - Audit Logging and Monitoring",
+      "nrb_description": "All security-relevant events must be logged. Systems must be observable and monitored.",
+      "mapped_checks": ["dockle_CIS-DI-0011"],
+      "hadolint_codes": [],
+      "dockle_codes": ["CIS-DI-0011"],
+      "severity_weight": 6,
+      "remediation_hint": "Add a HEALTHCHECK instruction to your Dockerfile. Ensure the container runtime is configured with a log driver."
+    },
+    {
+      "id": "NRB-012",
+      "nrb_document": "ICT Security Guidelines",
+      "nrb_clause": "Section 6.2 - Secure Configuration Management",
+      "nrb_description": "Systems must be configured securely. Default configurations must be reviewed and hardened.",
+      "mapped_checks": ["dockle_CIS-DI-0010", "hadolint_DL3008", "hadolint_DL3009"],
+      "hadolint_codes": ["DL3008", "DL3009"],
+      "dockle_codes": ["CIS-DI-0010"],
+      "severity_weight": 7,
+      "remediation_hint": "Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages."
+    }
+  ]
+}
