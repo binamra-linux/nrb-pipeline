@@ -1,0 +1,367 @@
+{
+  "image": "fintech-bad",
+  "scan_time": "2026-05-01 12:50:42",
+  "cve_counts": {
+    "CRITICAL": 1,
+    "HIGH": 8,
+    "MEDIUM": 30,
+    "LOW": 2
+  },
+  "cve_list": [
+    {
+      "id": "CVE-2023-24329",
+      "package": "libpython3.6",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "libpython3.6-dev",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "libpython3.6-minimal",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "libpython3.6-stdlib",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "python3.6",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "python3.6-dev",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2023-24329",
+      "package": "python3.6-minimal",
+      "severity": "MEDIUM",
+      "title": "python: urllib.parse url blocklisting bypass",
+      "fixed_version": "3.6.9-1~18.04ubuntu1.13"
+    },
+    {
+      "id": "CVE-2019-1010083",
+      "package": "Flask",
+      "severity": "HIGH",
+      "title": "python-flask: unexpected memory usage can lead to denial of service via crafted encoded JSON data",
+      "fixed_version": "1.0"
+    },
+    {
+      "id": "CVE-2023-30861",
+      "package": "Flask",
+      "severity": "HIGH",
+      "title": "flask: Possible disclosure of permanent session cookie due to missing Vary: Cookie header",
+      "fixed_version": "2.3.2, 2.2.5"
+    },
+    {
+      "id": "CVE-2026-27205",
+      "package": "Flask",
+      "severity": "LOW",
+      "title": "flask: Flask: Information disclosure via improper caching of session data",
+      "fixed_version": "3.1.3"
+    },
+    {
+      "id": "CVE-2024-22195",
+      "package": "Jinja2",
+      "severity": "MEDIUM",
+      "title": "jinja2: HTML attribute injection when passing user input as keys to xmlattr filter",
+      "fixed_version": "3.1.3"
+    },
+    {
+      "id": "CVE-2024-34064",
+      "package": "Jinja2",
+      "severity": "MEDIUM",
+      "title": "jinja2: accepts keys containing non-attribute characters",
+      "fixed_version": "3.1.4"
+    },
+    {
+      "id": "CVE-2024-56201",
+      "package": "Jinja2",
+      "severity": "MEDIUM",
+      "title": "jinja2: Jinja has a sandbox breakout through malicious filenames",
+      "fixed_version": "3.1.5"
+    },
+    {
+      "id": "CVE-2024-56326",
+      "package": "Jinja2",
+      "severity": "MEDIUM",
+      "title": "jinja2: Jinja has a sandbox breakout through indirect reference to format method",
+      "fixed_version": "3.1.5"
+    },
+    {
+      "id": "CVE-2025-27516",
+      "package": "Jinja2",
+      "severity": "MEDIUM",
+      "title": "jinja2: Jinja sandbox breakout through attr filter selecting format method",
+      "fixed_version": "3.1.6"
+    },
+    {
+      "id": "CVE-2023-25577",
+      "package": "Werkzeug",
+      "severity": "HIGH",
+      "title": "python-werkzeug: high resource usage when parsing multipart form data with many fields",
+      "fixed_version": "2.2.3"
+    },
+    {
+      "id": "CVE-2024-34069",
+      "package": "Werkzeug",
+      "severity": "HIGH",
+      "title": "python-werkzeug: user may execute code on a developer's machine",
+      "fixed_version": "3.0.3"
+    },
+    {
+      "id": "CVE-2023-46136",
+      "package": "Werkzeug",
+      "severity": "MEDIUM",
+      "title": "python-werkzeug: high resource consumption leading to denial of service",
+      "fixed_version": "3.0.1, 2.3.8"
+    },
+    {
+      "id": "CVE-2024-49766",
+      "package": "Werkzeug",
+      "severity": "MEDIUM",
+      "title": "werkzeug: python-werkzeug: Werkzeug safe_join not safe on Windows",
+      "fixed_version": "3.0.6"
+    },
+    {
+      "id": "CVE-2024-49767",
+      "package": "Werkzeug",
+      "severity": "MEDIUM",
+      "title": "werkzeug: python-werkzeug: Werkzeug possible resource exhaustion when parsing file data in forms",
+      "fixed_version": "3.0.6"
+    }
+  ],
+  "hadolint": [
+    {
+      "code": "DL3008",
+      "column": 1,
+      "file": "fintech-apps/bad/Dockerfile",
+      "level": "warning",
+      "line": 4,
+      "message": "Pin versions in apt get install. Instead of `apt-get install <package>` use `apt-get install <package>=<version>`"
+    },
+    {
+      "code": "DL3015",
+      "column": 1,
+      "file": "fintech-apps/bad/Dockerfile",
+      "level": "info",
+      "line": 4,
+      "message": "Avoid additional packages by specifying `--no-install-recommends`"
+    },
+    {
+      "code": "DL3009",
+      "column": 1,
+      "file": "fintech-apps/bad/Dockerfile",
+      "level": "info",
+      "line": 4,
+      "message": "Delete the apt lists (/var/lib/apt/lists) after installing something"
+    },
+    {
+      "code": "DL3042",
+      "column": 1,
+      "file": "fintech-apps/bad/Dockerfile",
+      "level": "warning",
+      "line": 11,
+      "message": "Avoid use of cache directory with pip. Use `pip install --no-cache-dir <package>`"
+    },
+    {
+      "code": "DL3002",
+      "column": 1,
+      "file": "fintech-apps/bad/Dockerfile",
+      "level": "warning",
+      "line": 23,
+      "message": "Last USER should not be root"
+    }
+  ],
+  "dockle": {
+    "details": [],
+    "summary": []
+  },
+  "nrb_compliance": {
+    "controls": [
+      {
+        "id": "NRB-001",
+        "nrb_clause": "Section 6.4 - Patch Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All software components must be current. End-of-life software must not be used in production.",
+        "compliant": false,
+        "violations": [
+          "trivy_critical_cves",
+          "trivy_high_cves"
+        ],
+        "severity_weight": 10,
+        "remediation_hint": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment."
+      },
+      {
+        "id": "NRB-002",
+        "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Regular vulnerability assessments must be conducted and findings remediated by severity.",
+        "compliant": false,
+        "violations": [
+          "trivy_medium_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Document all unfixed CVEs with justification. Upgrade packages where fixes are available."
+      },
+      {
+        "id": "NRB-003",
+        "nrb_clause": "Section 5.1 - Access Control and Least Privilege",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "No service or process should operate with more permissions than required for its function.",
+        "compliant": false,
+        "violations": [
+          "hadolint_DL3002"
+        ],
+        "severity_weight": 9,
+        "remediation_hint": "Add a non-root USER instruction in your Dockerfile. Create a dedicated app user with minimal permissions."
+      },
+      {
+        "id": "NRB-004",
+        "nrb_clause": "Section 5.3 - Privileged Account Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Privileged access must be tightly controlled and restricted to business need only.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove setuid/setgid bits. Avoid adding Linux capabilities. Use --security-opt=no-new-privileges at runtime."
+      },
+      {
+        "id": "NRB-005",
+        "nrb_clause": "Section 7.1 - Network Security",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Unnecessary network services must be disabled. Only required ports should be open.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove EXPOSE for ports not required by the application. Never expose port 22 in a container."
+      },
+      {
+        "id": "NRB-006",
+        "nrb_clause": "Section 4.2 - Secure Communication",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "All communication between payment components must be encrypted. Unencrypted protocols must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Ensure OpenSSL and TLS libraries are fully patched. Use a base image with current libssl."
+      },
+      {
+        "id": "NRB-007",
+        "nrb_clause": "Section 3.1 - Credential Management",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "Credentials, API keys, and cryptographic keys must not be hardcoded in source code or config files.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Remove all ENV instructions containing credentials. Use Docker secrets or a vault solution at runtime."
+      },
+      {
+        "id": "NRB-008",
+        "nrb_clause": "Section 5.6 - Cryptographic Controls",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Strong approved cryptographic algorithms must be used. Deprecated algorithms must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 9,
+        "remediation_hint": "Audit all cryptographic dependencies. Upgrade to current versions of all crypto libraries."
+      },
+      {
+        "id": "NRB-009",
+        "nrb_clause": "Section 9.2 - Third Party and Supply Chain Risk",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Risks from third-party software components and vendor-supplied systems must be assessed and managed.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Use official verified base images only. Pin base image to a specific digest not just a tag."
+      },
+      {
+        "id": "NRB-010",
+        "nrb_clause": "Section 4.4 - Technology Risk",
+        "nrb_document": "Risk Management Guidelines",
+        "description": "Risks from open-source components, outdated libraries, and unverified software must be identified and managed.",
+        "compliant": false,
+        "violations": [
+          "trivy_os_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages."
+      },
+      {
+        "id": "NRB-011",
+        "nrb_clause": "Section 8.1 - Audit Logging and Monitoring",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All security-relevant events must be logged. Systems must be observable and monitored.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 6,
+        "remediation_hint": "Add a HEALTHCHECK instruction to your Dockerfile. Ensure the container runtime is configured with a log driver."
+      },
+      {
+        "id": "NRB-012",
+        "nrb_clause": "Section 6.2 - Secure Configuration Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Systems must be configured securely. Default configurations must be reviewed and hardened.",
+        "compliant": false,
+        "violations": [
+          "hadolint_DL3008",
+          "hadolint_DL3009"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages."
+      }
+    ],
+    "compliance_score": 59.6,
+    "total_critical_cves": 1,
+    "total_high_cves": 8,
+    "total_medium_cves": 30,
+    "flags": {
+      "trivy_critical_cves": true,
+      "trivy_high_cves": true,
+      "trivy_medium_cves": true,
+      "trivy_unfixed_cves": false,
+      "trivy_openssl_cves": false,
+      "trivy_libssl_cves": false,
+      "trivy_crypto_cves": false,
+      "trivy_os_cves": true,
+      "trivy_library_cves": false,
+      "trivy_secret_scan": false,
+      "hadolint_DL3002": true,
+      "hadolint_DL3006": false,
+      "hadolint_DL3007": false,
+      "hadolint_DL3008": true,
+      "hadolint_DL3009": true,
+      "hadolint_DL3010": false,
+      "hadolint_DL3011": false,
+      "hadolint_DL3025": false,
+      "dockle_CIS-DI-0001": false,
+      "dockle_CIS-DI-0005": false,
+      "dockle_CIS-DI-0006": false,
+      "dockle_CIS-DI-0008": false,
+      "dockle_CIS-DI-0009": false,
+      "dockle_CIS-DI-0010": false,
+      "dockle_CIS-DI-0011": false
+    }
+  },
+  "ai_advisories": [],
+  "ai_narrative": "Executive report could not be generated. Please check API key and connectivity."
+}

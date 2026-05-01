@@ -1,0 +1,321 @@
+{
+  "image": "fintech-good",
+  "scan_time": "2026-05-01 12:51:08",
+  "cve_counts": {
+    "CRITICAL": 0,
+    "HIGH": 6,
+    "MEDIUM": 34,
+    "LOW": 75
+  },
+  "cve_list": [
+    {
+      "id": "CVE-2011-3374",
+      "package": "apt",
+      "severity": "LOW",
+      "title": "It was found that apt-key in apt, all versions, do not correctly valid ...",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "TEMP-0841856-B18BAF",
+      "package": "bash",
+      "severity": "LOW",
+      "title": "[Privilege escalation possible to other user than root]",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-27456",
+      "package": "bsdutils",
+      "severity": "MEDIUM",
+      "title": "util-linux: TOCTOU in the mount program when setting up loop devices",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2022-0563",
+      "package": "bsdutils",
+      "severity": "LOW",
+      "title": "util-linux: partial disclosure of arbitrary files in chfn and chsh when compiled with libreadline",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-14104",
+      "package": "bsdutils",
+      "severity": "LOW",
+      "title": "util-linux: util-linux: Heap buffer overread in setpwnam() when processing 256-byte usernames",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-3184",
+      "package": "bsdutils",
+      "severity": "LOW",
+      "title": "util-linux: util-linux: Access control bypass due to improper hostname canonicalization",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2017-18018",
+      "package": "coreutils",
+      "severity": "LOW",
+      "title": "coreutils: race condition vulnerability in chown and chgrp",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-5278",
+      "package": "coreutils",
+      "severity": "LOW",
+      "title": "coreutils: Heap Buffer Under-Read in GNU Coreutils sort via Key Specification",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2011-3374",
+      "package": "libapt-pkg7.0",
+      "severity": "LOW",
+      "title": "It was found that apt-key in apt, all versions, do not correctly valid ...",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-27456",
+      "package": "libblkid1",
+      "severity": "MEDIUM",
+      "title": "util-linux: TOCTOU in the mount program when setting up loop devices",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2022-0563",
+      "package": "libblkid1",
+      "severity": "LOW",
+      "title": "util-linux: partial disclosure of arbitrary files in chfn and chsh when compiled with libreadline",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-14104",
+      "package": "libblkid1",
+      "severity": "LOW",
+      "title": "util-linux: util-linux: Heap buffer overread in setpwnam() when processing 256-byte usernames",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-3184",
+      "package": "libblkid1",
+      "severity": "LOW",
+      "title": "util-linux: util-linux: Access control bypass due to improper hostname canonicalization",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-4046",
+      "package": "libc-bin",
+      "severity": "MEDIUM",
+      "title": "glibc: glibc: Denial of Service via iconv() function with specific character sets",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-4437",
+      "package": "libc-bin",
+      "severity": "MEDIUM",
+      "title": "glibc: glibc: Incorrect DNS response parsing via crafted DNS server response",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-4438",
+      "package": "libc-bin",
+      "severity": "MEDIUM",
+      "title": "glibc: glibc: Invalid DNS hostname returned via gethostbyaddr functions",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-5450",
+      "package": "libc-bin",
+      "severity": "MEDIUM",
+      "title": "glibc: glibc: Heap Buffer Overflow in `scanf` with `%mc` format specifier and large width",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2026-5928",
+      "package": "libc-bin",
+      "severity": "MEDIUM",
+      "title": "glibc: glibc: Information disclosure or denial of service via ungetwc function with specific wide character encodings",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2010-4756",
+      "package": "libc-bin",
+      "severity": "LOW",
+      "title": "glibc: glob implementation can cause excessive CPU and memory consumption due to crafted glob expressions",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2018-20796",
+      "package": "libc-bin",
+      "severity": "LOW",
+      "title": "glibc: uncontrolled recursion in function check_dst_limits_calc_pos_1 in posix/regexec.c",
+      "fixed_version": "Not available"
+    }
+  ],
+  "hadolint": [],
+  "dockle": {
+    "details": [],
+    "summary": []
+  },
+  "nrb_compliance": {
+    "controls": [
+      {
+        "id": "NRB-001",
+        "nrb_clause": "Section 6.4 - Patch Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All software components must be current. End-of-life software must not be used in production.",
+        "compliant": false,
+        "violations": [
+          "trivy_high_cves"
+        ],
+        "severity_weight": 10,
+        "remediation_hint": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment."
+      },
+      {
+        "id": "NRB-002",
+        "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Regular vulnerability assessments must be conducted and findings remediated by severity.",
+        "compliant": false,
+        "violations": [
+          "trivy_medium_cves",
+          "trivy_unfixed_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Document all unfixed CVEs with justification. Upgrade packages where fixes are available."
+      },
+      {
+        "id": "NRB-003",
+        "nrb_clause": "Section 5.1 - Access Control and Least Privilege",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "No service or process should operate with more permissions than required for its function.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 9,
+        "remediation_hint": "Add a non-root USER instruction in your Dockerfile. Create a dedicated app user with minimal permissions."
+      },
+      {
+        "id": "NRB-004",
+        "nrb_clause": "Section 5.3 - Privileged Account Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Privileged access must be tightly controlled and restricted to business need only.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove setuid/setgid bits. Avoid adding Linux capabilities. Use --security-opt=no-new-privileges at runtime."
+      },
+      {
+        "id": "NRB-005",
+        "nrb_clause": "Section 7.1 - Network Security",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Unnecessary network services must be disabled. Only required ports should be open.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove EXPOSE for ports not required by the application. Never expose port 22 in a container."
+      },
+      {
+        "id": "NRB-006",
+        "nrb_clause": "Section 4.2 - Secure Communication",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "All communication between payment components must be encrypted. Unencrypted protocols must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Ensure OpenSSL and TLS libraries are fully patched. Use a base image with current libssl."
+      },
+      {
+        "id": "NRB-007",
+        "nrb_clause": "Section 3.1 - Credential Management",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "Credentials, API keys, and cryptographic keys must not be hardcoded in source code or config files.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Remove all ENV instructions containing credentials. Use Docker secrets or a vault solution at runtime."
+      },
+      {
+        "id": "NRB-008",
+        "nrb_clause": "Section 5.6 - Cryptographic Controls",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Strong approved cryptographic algorithms must be used. Deprecated algorithms must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 9,
+        "remediation_hint": "Audit all cryptographic dependencies. Upgrade to current versions of all crypto libraries."
+      },
+      {
+        "id": "NRB-009",
+        "nrb_clause": "Section 9.2 - Third Party and Supply Chain Risk",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Risks from third-party software components and vendor-supplied systems must be assessed and managed.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Use official verified base images only. Pin base image to a specific digest not just a tag."
+      },
+      {
+        "id": "NRB-010",
+        "nrb_clause": "Section 4.4 - Technology Risk",
+        "nrb_document": "Risk Management Guidelines",
+        "description": "Risks from open-source components, outdated libraries, and unverified software must be identified and managed.",
+        "compliant": false,
+        "violations": [
+          "trivy_os_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages."
+      },
+      {
+        "id": "NRB-011",
+        "nrb_clause": "Section 8.1 - Audit Logging and Monitoring",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All security-relevant events must be logged. Systems must be observable and monitored.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 6,
+        "remediation_hint": "Add a HEALTHCHECK instruction to your Dockerfile. Ensure the container runtime is configured with a log driver."
+      },
+      {
+        "id": "NRB-012",
+        "nrb_clause": "Section 6.2 - Secure Configuration Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Systems must be configured securely. Default configurations must be reviewed and hardened.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 7,
+        "remediation_hint": "Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages."
+      }
+    ],
+    "compliance_score": 75.8,
+    "total_critical_cves": 0,
+    "total_high_cves": 6,
+    "total_medium_cves": 34,
+    "flags": {
+      "trivy_critical_cves": false,
+      "trivy_high_cves": true,
+      "trivy_medium_cves": true,
+      "trivy_unfixed_cves": true,
+      "trivy_openssl_cves": false,
+      "trivy_libssl_cves": false,
+      "trivy_crypto_cves": false,
+      "trivy_os_cves": true,
+      "trivy_library_cves": false,
+      "trivy_secret_scan": false,
+      "hadolint_DL3002": false,
+      "hadolint_DL3006": false,
+      "hadolint_DL3007": false,
+      "hadolint_DL3008": false,
+      "hadolint_DL3009": false,
+      "hadolint_DL3010": false,
+      "hadolint_DL3011": false,
+      "hadolint_DL3025": false,
+      "dockle_CIS-DI-0001": false,
+      "dockle_CIS-DI-0005": false,
+      "dockle_CIS-DI-0006": false,
+      "dockle_CIS-DI-0008": false,
+      "dockle_CIS-DI-0009": false,
+      "dockle_CIS-DI-0010": false,
+      "dockle_CIS-DI-0011": false
+    }
+  },
+  "ai_advisories": [],
+  "ai_narrative": "Executive report could not be generated. Please check API key and connectivity."
+}

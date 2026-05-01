@@ -35,17 +35,21 @@ def run_hadolint(dockerfile_path):
 
 def run_dockle(image_name):
     """Run Dockle CIS Docker Benchmark checks."""
+    import re
     print(f"  [*] Running Dockle CIS checks on {image_name}...")
     result = subprocess.run(
         ["dockle", "--format", "json", image_name],
         capture_output=True, text=True
     )
-    try:
-        output = result.stdout.strip() if result.stdout.strip() else result.stderr.strip()
-        return json.loads(output) if output else {}
-    except Exception as e:
-        print(f"  [!] Dockle error: {e}")
-        return {}
+    output = (result.stdout + result.stderr).strip()
+    json_match = re.search(r'\{.*\}', output, re.DOTALL)
+    if json_match:
+        try:
+            return json.loads(json_match.group())
+        except Exception as e:
+            print(f"  [!] Dockle parse error: {e}")
+    print(f"  [!] Dockle returned no parseable JSON for {image_name}")
+    return {"details": [], "summary": []}
 
 def extract_cve_summary(trivy_data):
     """Count CVEs by severity from Trivy results."""

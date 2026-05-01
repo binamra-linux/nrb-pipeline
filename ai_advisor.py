@@ -5,6 +5,26 @@ import os
 
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
+def call_gemini(prompt, retries=3):
+    """Call Gemini with automatic retry on rate limit."""
+    for attempt in range(retries):
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.0-flash-lite",
+                contents=prompt
+            )
+            return response.text
+        except Exception as e:
+            error_str = str(e)
+            if "429" in error_str or "RESOURCE_EXHAUSTED" in error_str:
+                wait = 60 * (attempt + 1)
+                print(f"      [!] Rate limited. Waiting {wait}s before retry...")
+                time.sleep(wait)
+            else:
+                raise e
+    return None
+
+
 def generate_remediation(violation_code, control):
     """
     Takes one NRB control violation and generates
@@ -30,11 +50,9 @@ Respond ONLY with a valid JSON object in exactly this format, no other text:
 }}"""
 
     try:
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=prompt
-        )
-        raw   = response.text.strip()
+        raw   = call_gemini(prompt)
+        if not raw:
+            raise Exception("No response from Gemini")
         clean = raw.replace("```json", "").replace("```", "").strip()
         return json.loads(clean)
     except json.JSONDecodeError:
@@ -45,7 +63,7 @@ Respond ONLY with a valid JSON object in exactly this format, no other text:
             "risk_if_ignored":   "Non-compliance with NRB ICT Security Guidelines"
         }
     except Exception as e:
-        print(f"  [!] AI advisor error for {violation_code}: {e}")
+        print(f"      [!] AI advisor error for {violation_code}: {e}")
         return None
 
 
@@ -54,7 +72,7 @@ def advise_all_violations(nrb_compliance):
     Loop through all failed NRB controls and generate
     AI remediation advice for each violation found.
     """
-    advisories = []
+    advisories     = []
     failed_controls = [
         c for c in nrb_compliance["controls"]
         if not c["compliant"]
@@ -78,7 +96,7 @@ def advise_all_violations(nrb_compliance):
                     "violation":    violation_code,
                     "advisory":     advisory,
                 })
-            time.sleep(1)
+            time.sleep(4)  # 4 seconds between every call
 
     return advisories
 
@@ -90,16 +108,8 @@ def generate_executive_report(report_data):
     """
     nrb = report_data["nrb_compliance"]
 
-    failed = [
-        c["nrb_clause"]
-        for c in nrb["controls"]
-        if not c["compliant"]
-    ]
-    passed = [
-        c["nrb_clause"]
-        for c in nrb["controls"]
-        if c["compliant"]
-    ]
+    failed = [c["nrb_clause"] for c in nrb["controls"] if not c["compliant"]]
+    passed = [c["nrb_clause"] for c in nrb["controls"] if c["compliant"]]
 
     summary = {
         "image_name":       report_data["image"],
@@ -141,11 +151,8 @@ for deployment in a payment processing environment.
 Write formally but clearly. Reference NRB clauses by name throughout."""
 
     try:
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=prompt
-        )
-        return response.text
+        text = call_gemini(prompt)
+        return text if text else "Executive report could not be generated."
     except Exception as e:
         print(f"  [!] Executive report generation error: {e}")
         return "Executive report could not be generated. Please check API key and connectivity."
