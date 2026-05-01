@@ -1,10 +1,9 @@
-import google.generativeai as genai
+from google import genai
 import json
 import time
 import os
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 def generate_remediation(violation_code, control):
     """
@@ -31,7 +30,10 @@ Respond ONLY with a valid JSON object in exactly this format, no other text:
 }}"""
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt
+        )
         raw   = response.text.strip()
         clean = raw.replace("```json", "").replace("```", "").strip()
         return json.loads(clean)
@@ -76,7 +78,7 @@ def advise_all_violations(nrb_compliance):
                     "violation":    violation_code,
                     "advisory":     advisory,
                 })
-            time.sleep(1)  # stay within free tier rate limits
+            time.sleep(1)
 
     return advisories
 
@@ -139,7 +141,10 @@ for deployment in a payment processing environment.
 Write formally but clearly. Reference NRB clauses by name throughout."""
 
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt
+        )
         return response.text
     except Exception as e:
         print(f"  [!] Executive report generation error: {e}")
