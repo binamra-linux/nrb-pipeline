@@ -22,6 +22,9 @@ def run_trivy(image_name):
 
 def run_hadolint(dockerfile_path):
     """Run Hadolint Dockerfile linter."""
+    if not dockerfile_path:
+        print(f"  [*] Skipping Hadolint (no Dockerfile available for pulled image)")
+        return []
     print(f"  [*] Running Hadolint on {dockerfile_path}...")
     result = subprocess.run(
         ["hadolint", "--format", "json", dockerfile_path],
@@ -127,11 +130,16 @@ def run_pipeline(image_name, dockerfile_path):
     return report_data
 
 if __name__ == "__main__":
-    # Define all three test images
+    # Define all test images
+    # None = no Dockerfile available (pulled from Docker Hub)
     images = [
-        ("fintech-bad",    "fintech-apps/bad/Dockerfile"),
-        ("fintech-medium", "fintech-apps/medium/Dockerfile"),
-        ("fintech-good",   "fintech-apps/good/Dockerfile"),
+        # Simulated images (controlled baseline)
+        ("fintech-bad",          "fintech-apps/bad/Dockerfile"),
+        ("fintech-medium",       "fintech-apps/medium/Dockerfile"),
+        ("fintech-good",         "fintech-apps/good/Dockerfile"),
+        # Real-world Docker Hub images
+        ("fireflyiii/core",      None),
+        ("akaunting/akaunting",  None),
     ]
 
     all_results = []

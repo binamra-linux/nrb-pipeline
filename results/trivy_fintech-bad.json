@@ -3,8 +3,8 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019de2b3-8e4d-75a9-8208-81c305bb089c",
-  "CreatedAt": "2026-05-01T14:26:51.437372839+05:45",
+  "ReportID": "019de6e8-bc31-7b57-b848-db9250fcd42c",
+  "CreatedAt": "2026-05-02T10:03:25.457745272+05:45",
   "ArtifactID": "sha256:fbca13534b88679a7b8875d57dee2fec691b6845a3cebb5b4c9540a5d320c8b1",
   "ArtifactName": "fintech-bad",
   "ArtifactType": "container_image",
@@ -23835,7 +23835,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -23941,7 +23941,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -24047,7 +24047,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -24153,7 +24153,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -24259,7 +24259,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -24365,7 +24365,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -24471,7 +24471,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "bitnami": 3,
             "cbl-mariner": 3,
             "nvd": 3,
@@ -25390,7 +25390,7 @@
             "https://bugzilla.redhat.com/show_bug.cgi?id=2350190",
             "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-27516",
             "https://errata.almalinux.org/9/ALSA-2025-3406.html",
-            "https://errata.rockylinux.org/RLSA-2025:3406",
+            "https://errata.rockylinux.org/RLSA-2025:7476",
             "https://github.com/pallets/jinja",
             "https://github.com/pallets/jinja/commit/90457bbf33b8662926ae65cdde4c4c32e756e403",
             "https://github.com/pallets/jinja/security/advisories/GHSA-cpwx-vrp4-4pq7",
@@ -26443,7 +26443,7 @@
             "https://bugzilla.redhat.com/show_bug.cgi?id=2371272",
             "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-47081",
             "https://errata.almalinux.org/9/ALSA-2025-12519.html",
-            "https://errata.rockylinux.org/RLSA-2025:12519",
+            "https://errata.rockylinux.org/RLSA-2025:13604",
             "https://github.com/psf/requests",
             "https://github.com/psf/requests/commit/96ba401c1296ab1dda74a2365ef36d88f7d144ef",
             "https://github.com/psf/requests/pull/6965",
@@ -26557,7 +26557,7 @@
           "Severity": "CRITICAL",
           "VendorSeverity": {
             "alma": 2,
-            "amazon": 2,
+            "amazon": 1,
             "ghsa": 4,
             "nvd": 4,
             "oracle-oval": 2,
@@ -26880,7 +26880,7 @@
           ],
           "VendorSeverity": {
             "alma": 3,
-            "amazon": 2,
+            "amazon": 3,
             "azure": 3,
             "cbl-mariner": 3,
             "ghsa": 3,
@@ -26918,7 +26918,7 @@
             "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2025-66471",
             "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-21441",
             "https://errata.almalinux.org/9/ALSA-2026-1239.html",
-            "https://errata.rockylinux.org/RLSA-2026:1087",
+            "https://errata.rockylinux.org/RLSA-2026:1086",
             "https://github.com/urllib3/urllib3",
             "https://github.com/urllib3/urllib3/commit/c19571de34c47de3a766541b041637ba5f716ed7",
             "https://github.com/urllib3/urllib3/security/advisories/GHSA-2xpw-w6gg-jr37",
