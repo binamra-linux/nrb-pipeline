@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NRBShield — Compare Scans</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:#0d1117; color:#e6edf3; }
+.navbar { background:#161b22; border-bottom:1px solid #30363d; padding:16px 32px; display:flex; align-items:center; gap:16px; }
+.navbar .logo { font-size:1.4em; font-weight:700; color:#58a6ff; }
+.navbar .logo span { color:#e94560; }
+.navbar a { color:#8b949e; text-decoration:none; font-size:0.9em; margin-left:auto; }
+.container { max-width:1200px; margin:0 auto; padding:32px 20px; }
+.page-title { font-size:1.4em; font-weight:700; margin-bottom:24px; }
+
+.compare-select { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:32px; }
+.select-box { background:#161b22; border:1px solid #30363d; border-radius:12px; padding:20px; }
+.select-box h3 { font-size:0.85em; color:#8b949e; text-transform:uppercase; margin-bottom:12px; }
+select { width:100%; background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:10px; color:#e6edf3; font-size:0.9em; }
+.btn { background:#238636; color:white; border:none; border-radius:8px; padding:10px 24px; cursor:pointer; font-size:0.9em; font-weight:600; margin-top:16px; }
+
+.compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+.compare-col { background:#161b22; border:1px solid #30363d; border-radius:12px; padding:24px; }
+.compare-col h2 { font-size:1em; color:#58a6ff; margin-bottom:20px; word-break:break-all; }
+
+.metric { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #21262d; }
+.metric:last-child { border-bottom:none; }
+.metric .label { font-size:0.85em; color:#8b949e; }
+.metric .value { font-weight:700; }
+.score-green { color:#3fb950; } .score-amber { color:#e3b341; } .score-red { color:#f85149; }
+.pass { color:#3fb950; } .fail { color:#f85149; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">NRB<span>Shield</span></div>
+  <a href="/">← Back to Dashboard</a>
+</nav>
+<div class="container">
+  <div class="page-title">Compare Scans</div>
+
+  <form class="compare-select" method="GET" action="/compare">
+    <div class="select-box">
+      <h3>Scan A</h3>
+      <select name="id1">
+        {% for s in scans %}
+        <option value="{{ s.id }}" {% if s.id == id1 %}selected{% endif %}>
+          #{{ s.id }} — {{ s.image_name }} ({{ s.score }}%)
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="select-box">
+      <h3>Scan B</h3>
+      <select name="id2">
+        {% for s in scans %}
+        <option value="{{ s.id }}" {% if s.id == id2 %}selected{% endif %}>
+          #{{ s.id }} — {{ s.image_name }} ({{ s.score }}%)
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div style="grid-column:1/-1">
+      <button class="btn" type="submit">Compare</button>
+    </div>
+  </form>
+
+  {% if scan1 and scan2 %}
+  <div class="compare-grid">
+    {% for scan in [scan1, scan2] %}
+    {% set nrb = scan.nrb_compliance %}
+    {% set score = nrb.compliance_score %}
+    <div class="compare-col">
+      <h2>{{ scan.image }}</h2>
+      <div class="metric">
+        <span class="label">NRB Compliance Score</span>
+        <span class="value {% if score >= 80 %}score-green{% elif score >= 50 %}score-amber{% else %}score-red{% endif %}">{{ score }}%</span>
+      </div>
+      <div class="metric">
+        <span class="label">Critical CVEs</span>
+        <span class="value score-red">{{ scan.cve_counts.CRITICAL }}</span>
+      </div>
+      <div class="metric">
+        <span class="label">High CVEs</span>
+        <span class="value score-amber">{{ scan.cve_counts.HIGH }}</span>
+      </div>
+      <div class="metric">
+        <span class="label">Medium CVEs</span>
+        <span class="value">{{ scan.cve_counts.MEDIUM }}</span>
+      </div>
+      <div class="metric">
+        <span class="label">Controls Passed</span>
+        <span class="value pass">{{ nrb.controls | selectattr("compliant") | list | length }}/12</span>
+      </div>
+      <div class="metric">
+        <span class="label">Controls Failed</span>
+        <span class="value fail">{{ nrb.controls | rejectattr("compliant") | list | length }}/12</span>
+      </div>
+      <div class="metric">
+        <span class="label">Scanned At</span>
+        <span class="value" style="font-size:0.85em">{{ scan.scan_time }}</span>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+</body>
+</html>

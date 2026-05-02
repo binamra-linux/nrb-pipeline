@@ -1,0 +1,384 @@
+{
+  "image": "fireflyiii/core",
+  "scan_time": "2026-05-02 11:26:13",
+  "cve_counts": {
+    "CRITICAL": 9,
+    "HIGH": 106,
+    "MEDIUM": 597,
+    "LOW": 679,
+    "UNKNOWN": 158
+  },
+  "cve_list": [
+    {
+      "id": "CVE-2011-3374",
+      "package": "apt",
+      "severity": "LOW",
+      "title": "It was found that apt-key in apt, all versions, do not correctly valid ...",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "TEMP-0841856-B18BAF",
+      "package": "bash",
+      "severity": "LOW",
+      "title": "[Privilege escalation possible to other user than root]",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2017-13716",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: Memory leak with the C++ symbol demangler routine in libiberty",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2018-20673",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "libiberty: Integer overflow in demangle_template() function",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2018-20712",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "libiberty: heap-based buffer over-read in d_expression_1",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2018-9996",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: Stack-overflow in libiberty/cplus-dem.c causes crash",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2021-32256",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: stack-overflow issue in demangle_type in rust-demangle.c.",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11081",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils out-of-bounds read",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11082",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker heap-based overflow",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11083",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker heap-based overflow",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11412",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker elflink.c bfd_elf_gc_record_vtentry out-of-bounds",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11413",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker elflink.c elf_link_add_object_symbols out-of-bounds",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11414",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker elflink.c get_link_hash_entry out-of-bounds",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-1147",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils nm nm.c internal_strlen buffer overflow",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-1148",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils ld ldelfgen.c link_order_scan memory leak",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-1149",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils ld xmalloc.c xstrdup memory leak",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11494",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker out-of-bounds read",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-11495",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils Linker heap-based overflow",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-1150",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils ld libbfd.c bfd_malloc memory leak",
+      "fixed_version": "Not available"
+    },
+    {
+      "id": "CVE-2025-1151",
+      "package": "binutils",
+      "severity": "LOW",
+      "title": "binutils: GNU Binutils ld xmemdup.c xmemdup memory leak",
+      "fixed_version": "Not available"
+    }
+  ],
+  "hadolint": [],
+  "dockle": {
+    "details": [],
+    "summary": []
+  },
+  "nrb_compliance": {
+    "controls": [
+      {
+        "id": "NRB-001",
+        "nrb_clause": "Section 6.4 - Patch Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All software components must be current. End-of-life software must not be used in production.",
+        "compliant": false,
+        "violations": [
+          "trivy_critical_cves",
+          "trivy_high_cves"
+        ],
+        "severity_weight": 10,
+        "remediation_hint": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment."
+      },
+      {
+        "id": "NRB-002",
+        "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Regular vulnerability assessments must be conducted and findings remediated by severity.",
+        "compliant": false,
+        "violations": [
+          "trivy_medium_cves",
+          "trivy_unfixed_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Document all unfixed CVEs with justification. Upgrade packages where fixes are available."
+      },
+      {
+        "id": "NRB-003",
+        "nrb_clause": "Section 5.1 - Access Control and Least Privilege",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "No service or process should operate with more permissions than required for its function.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 9,
+        "remediation_hint": "Add a non-root USER instruction in your Dockerfile. Create a dedicated app user with minimal permissions."
+      },
+      {
+        "id": "NRB-004",
+        "nrb_clause": "Section 5.3 - Privileged Account Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Privileged access must be tightly controlled and restricted to business need only.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove setuid/setgid bits. Avoid adding Linux capabilities. Use --security-opt=no-new-privileges at runtime."
+      },
+      {
+        "id": "NRB-005",
+        "nrb_clause": "Section 7.1 - Network Security",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Unnecessary network services must be disabled. Only required ports should be open.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Remove EXPOSE for ports not required by the application. Never expose port 22 in a container."
+      },
+      {
+        "id": "NRB-006",
+        "nrb_clause": "Section 4.2 - Secure Communication",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "All communication between payment components must be encrypted. Unencrypted protocols must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Ensure OpenSSL and TLS libraries are fully patched. Use a base image with current libssl."
+      },
+      {
+        "id": "NRB-007",
+        "nrb_clause": "Section 3.1 - Credential Management",
+        "nrb_document": "Digital Payment Security Guidelines",
+        "description": "Credentials, API keys, and cryptographic keys must not be hardcoded in source code or config files.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 10,
+        "remediation_hint": "Remove all ENV instructions containing credentials. Use Docker secrets or a vault solution at runtime."
+      },
+      {
+        "id": "NRB-008",
+        "nrb_clause": "Section 5.6 - Cryptographic Controls",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Strong approved cryptographic algorithms must be used. Deprecated algorithms must not be used.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 9,
+        "remediation_hint": "Audit all cryptographic dependencies. Upgrade to current versions of all crypto libraries."
+      },
+      {
+        "id": "NRB-009",
+        "nrb_clause": "Section 9.2 - Third Party and Supply Chain Risk",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Risks from third-party software components and vendor-supplied systems must be assessed and managed.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 8,
+        "remediation_hint": "Use official verified base images only. Pin base image to a specific digest not just a tag."
+      },
+      {
+        "id": "NRB-010",
+        "nrb_clause": "Section 4.4 - Technology Risk",
+        "nrb_document": "Risk Management Guidelines",
+        "description": "Risks from open-source components, outdated libraries, and unverified software must be identified and managed.",
+        "compliant": false,
+        "violations": [
+          "trivy_os_cves"
+        ],
+        "severity_weight": 7,
+        "remediation_hint": "Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages."
+      },
+      {
+        "id": "NRB-011",
+        "nrb_clause": "Section 8.1 - Audit Logging and Monitoring",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "All security-relevant events must be logged. Systems must be observable and monitored.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 6,
+        "remediation_hint": "Add a HEALTHCHECK instruction to your Dockerfile. Ensure the container runtime is configured with a log driver."
+      },
+      {
+        "id": "NRB-012",
+        "nrb_clause": "Section 6.2 - Secure Configuration Management",
+        "nrb_document": "ICT Security Guidelines",
+        "description": "Systems must be configured securely. Default configurations must be reviewed and hardened.",
+        "compliant": true,
+        "violations": [],
+        "severity_weight": 7,
+        "remediation_hint": "Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages."
+      }
+    ],
+    "compliance_score": 75.8,
+    "total_critical_cves": 9,
+    "total_high_cves": 106,
+    "total_medium_cves": 597,
+    "flags": {
+      "trivy_critical_cves": true,
+      "trivy_high_cves": true,
+      "trivy_medium_cves": true,
+      "trivy_unfixed_cves": true,
+      "trivy_openssl_cves": false,
+      "trivy_libssl_cves": false,
+      "trivy_crypto_cves": false,
+      "trivy_os_cves": true,
+      "trivy_library_cves": false,
+      "trivy_secret_scan": false,
+      "hadolint_DL3002": false,
+      "hadolint_DL3006": false,
+      "hadolint_DL3007": false,
+      "hadolint_DL3008": false,
+      "hadolint_DL3009": false,
+      "hadolint_DL3010": false,
+      "hadolint_DL3011": false,
+      "hadolint_DL3025": false,
+      "dockle_CIS-DI-0001": false,
+      "dockle_CIS-DI-0005": false,
+      "dockle_CIS-DI-0006": false,
+      "dockle_CIS-DI-0008": false,
+      "dockle_CIS-DI-0009": false,
+      "dockle_CIS-DI-0010": false,
+      "dockle_CIS-DI-0011": false
+    }
+  },
+  "ai_advisories": [
+    {
+      "nrb_id": "NRB-001",
+      "nrb_clause": "Section 6.4 - Patch Management",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_critical_cves",
+      "advisory": {
+        "immediate_fix": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment.",
+        "code_example": "# See NRB remediation guidance",
+        "nrb_justification": "Addresses Section 6.4 - Patch Management",
+        "risk_if_ignored": "Non-compliance with NRB ICT Security Guidelines"
+      }
+    },
+    {
+      "nrb_id": "NRB-001",
+      "nrb_clause": "Section 6.4 - Patch Management",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_high_cves",
+      "advisory": {
+        "immediate_fix": "Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment.",
+        "code_example": "# See NRB remediation guidance",
+        "nrb_justification": "Addresses Section 6.4 - Patch Management",
+        "risk_if_ignored": "Non-compliance with NRB ICT Security Guidelines"
+      }
+    },
+    {
+      "nrb_id": "NRB-002",
+      "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_medium_cves",
+      "advisory": {
+        "immediate_fix": "Update Docker image to use a patched version of the affected package, specifically by adding a patch version in the Dockerfile's FROM instruction.",
+        "code_example": "FROM image:latest WITH patches FROM image:patched-version",
+        "nrb_justification": "This fix aligns with Section 6.5 of the NRB clause, which requires regular vulnerability assessments and remediation by severity.",
+        "risk_if_ignored": "Ignoring this vulnerability could lead to a significant breach in the security of Nepal's payment processing systems, compromising the trust and confidence of its citizens."
+      }
+    },
+    {
+      "nrb_id": "NRB-002",
+      "nrb_clause": "Section 6.5 - Vulnerability Assessment",
+      "nrb_document": "ICT Security Guidelines",
+      "violation": "trivy_unfixed_cves",
+      "advisory": {
+        "immediate_fix": "Update Docker image to version 1.0.2 or higher, which includes the patch for CVE-2022-4294",
+        "code_example": "FROM python:3.9-slim as build\n  RUN pip install --upgrade setuptools and pip",
+        "nrb_justification": "This update aligns with Section 6.5 of NRB's vulnerability assessment requirement",
+        "risk_if_ignored": "Ignoring this fix would expose the Nepal Rastra Bank's payment processing system to exploitation by attackers"
+      }
+    },
+    {
+      "nrb_id": "NRB-010",
+      "nrb_clause": "Section 4.4 - Technology Risk",
+      "nrb_document": "Risk Management Guidelines",
+      "violation": "trivy_os_cves",
+      "advisory": {
+        "immediate_fix": "Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages.",
+        "code_example": "# See NRB remediation guidance",
+        "nrb_justification": "Addresses Section 4.4 - Technology Risk",
+        "risk_if_ignored": "Non-compliance with NRB ICT Security Guidelines"
+      }
+    }
+  ],
+  "ai_narrative": "**NRB Compliance Report**\n\n**Executive Summary**\n\nOur NRB compliance report shows a score of 75.8%, indicating a moderate level of adherence to the regulations. While we have made progress in some areas, there are significant concerns in others.\n\n**Key Risks**\n\nCritical CVEs: 9 - Unpatched vulnerabilities pose a high risk to our systems and data.\nHigh CVEs: 106 - Many unaddressed vulnerabilities indicate inadequate vulnerability management.\nFailed NRB Controls:\n- Section 6.4: Patch Management - Inadequate patching practices leave us vulnerable.\n- Section 6.5: Vulnerability Assessment - Insufficient assessment of vulnerabilities puts our systems at risk.\n- Section 4.4: Technology Risk - Inadequate technology risk management exposes us to potential threats.\n\n**Top 3 Actions**\n\n1. Implement a robust patch management process to address Critical CVEs.\n2. Conduct thorough vulnerability assessments and address High CVEs promptly.\n3. Enhance technology risk management practices to mitigate potential threats.\n\n**Conclusion**\n\nWe acknowledge the areas for improvement and are committed to addressing them. By taking proactive steps, we aim to increase our NRB compliance score and ensure the security of our systems and data."
+}

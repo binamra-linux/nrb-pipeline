@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRB Compliance Report — fireflyiii/core</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    color: white; padding: 40px;
+    border-bottom: 4px solid #e94560;
+  }
+  .header h1 { font-size: 1.8em; margin-bottom: 8px; }
+  .header .subtitle { opacity: 0.8; font-size: 0.95em; }
+  .header .meta { margin-top: 15px; opacity: 0.7; font-size: 0.85em; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+
+  /* Score Card */
+  .score-section {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 25px; margin-bottom: 30px;
+  }
+  .score-card {
+    background: white; border-radius: 16px;
+    padding: 35px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .score-number {
+    font-size: 4.5em; font-weight: 700; line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-label { font-size: 0.95em; color: #666; margin-bottom: 15px; }
+  .score-badge {
+    display: inline-block; padding: 6px 18px;
+    border-radius: 20px; font-weight: 600; font-size: 0.9em;
+  }
+  .score-red    { color: #e74c3c; }
+  .score-amber  { color: #f39c12; }
+  .score-green  { color: #27ae60; }
+  .badge-red    { background: #fdecea; color: #e74c3c; }
+  .badge-amber  { background: #fef9e7; color: #f39c12; }
+  .badge-green  { background: #eafaf1; color: #27ae60; }
+
+  /* CVE Stats */
+  .cve-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  .cve-card {
+    background: white; border-radius: 12px;
+    padding: 20px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .cve-card .count { font-size: 2.5em; font-weight: 700; }
+  .cve-card .label { font-size: 0.8em; color: #666; margin-top: 4px; }
+  .cve-critical { border-top: 4px solid #e74c3c; }
+  .cve-high     { border-top: 4px solid #e67e22; }
+  .cve-medium   { border-top: 4px solid #f1c40f; }
+  .cve-low      { border-top: 4px solid #2ecc71; }
+  .cve-critical .count { color: #e74c3c; }
+  .cve-high     .count { color: #e67e22; }
+  .cve-medium   .count { color: #f1c40f; }
+  .cve-low      .count { color: #2ecc71; }
+
+  /* Section headings */
+  .section { margin-bottom: 30px; }
+  .section-title {
+    font-size: 1.2em; font-weight: 700;
+    margin-bottom: 15px; padding-bottom: 10px;
+    border-bottom: 2px solid #e94560;
+    color: #1a1a2e;
+  }
+
+  /* NRB Controls Table */
+  .controls-table {
+    width: 100%; border-collapse: collapse;
+    background: white; border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+  .controls-table th {
+    background: #1a1a2e; color: white;
+    padding: 14px 16px; text-align: left;
+    font-size: 0.85em; text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .controls-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f2f5;
+    font-size: 0.9em; vertical-align: top;
+  }
+  .controls-table tr:last-child td { border-bottom: none; }
+  .controls-table tr:hover td { background: #f8f9ff; }
+
+  .status-pass {
+    display: inline-block; padding: 4px 12px;
+    background: #eafaf1; color: #27ae60;
+    border-radius: 20px; font-weight: 600; font-size: 0.85em;
+  }
+  .status-fail {
+    display: inline-block; padding: 4px 12px;
+    background: #fdecea; color: #e74c3c;
+    border-radius: 20px; font-weight: 600; font-size: 0.85em;
+  }
+  .weight-badge {
+    display: inline-block; padding: 3px 10px;
+    background: #eef2ff; color: #4a6cf7;
+    border-radius: 10px; font-size: 0.8em; font-weight: 600;
+  }
+  .violation-tag {
+    display: inline-block; padding: 2px 8px;
+    background: #fff3cd; color: #856404;
+    border-radius: 6px; font-size: 0.78em;
+    margin: 2px; font-family: monospace;
+  }
+
+  /* AI Advisories */
+  .advisory-card {
+    background: white; border-radius: 12px;
+    margin-bottom: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border-left: 5px solid #e94560;
+  }
+  .advisory-header {
+    background: #f8f9ff; padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .advisory-header .clause {
+    font-weight: 600; color: #1a1a2e; font-size: 0.95em;
+  }
+  .advisory-header .doc-badge {
+    font-size: 0.78em; padding: 3px 10px;
+    background: #e8eaf6; color: #3949ab;
+    border-radius: 10px;
+  }
+  .advisory-body { padding: 20px; }
+  .advisory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; margin-top: 15px;
+  }
+  .advisory-item h4 {
+    font-size: 0.8em; text-transform: uppercase;
+    color: #888; margin-bottom: 6px; letter-spacing: 0.5px;
+  }
+  .advisory-item p { font-size: 0.9em; color: #333; line-height: 1.5; }
+  .code-block {
+    background: #1a1a2e; color: #a8ff78;
+    padding: 12px 16px; border-radius: 8px;
+    font-family: monospace; font-size: 0.85em;
+    white-space: pre-wrap; margin-top: 6px;
+  }
+  .risk-box {
+    background: #fdecea; border-radius: 8px;
+    padding: 12px 16px; margin-top: 6px;
+    font-size: 0.88em; color: #c0392b; line-height: 1.5;
+  }
+
+  /* Executive Narrative */
+  .narrative-box {
+    background: white; border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    line-height: 1.8; font-size: 0.95em; color: #333;
+    white-space: pre-wrap;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center; padding: 30px;
+    color: #999; font-size: 0.85em;
+    border-top: 1px solid #e0e0e0; margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <h1>NRB Container Compliance Report</h1>
+  <div class="subtitle">Nepal Rastra Bank ICT Security Guidelines — Container Image Assessment</div>
+  <div class="meta">
+    Image: <strong>fireflyiii/core</strong> &nbsp;|&nbsp;
+    Scanned: <strong>2026-05-02 11:26:13</strong>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SCORE + CVE SUMMARY -->
+  <div class="score-section">
+
+    <!-- Compliance Score -->
+    <div class="score-card">
+      
+      
+        <div class="score-number score-amber">75.8%</div>
+        <div class="score-label">NRB Compliance Score</div>
+        <span class="score-badge badge-amber">PARTIAL</span>
+      
+    </div>
+
+    <!-- CVE Counts -->
+    <div class="cve-grid">
+      <div class="cve-card cve-critical">
+        <div class="count">9</div>
+        <div class="label">CRITICAL CVEs</div>
+      </div>
+      <div class="cve-card cve-high">
+        <div class="count">106</div>
+        <div class="label">HIGH CVEs</div>
+      </div>
+      <div class="cve-card cve-medium">
+        <div class="count">597</div>
+        <div class="label">MEDIUM CVEs</div>
+      </div>
+      <div class="cve-card cve-low">
+        <div class="count">679</div>
+        <div class="label">LOW CVEs</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NRB CONTROLS TABLE -->
+  <div class="section">
+    <div class="section-title">NRB Control Compliance Status</div>
+    <table class="controls-table">
+      <thead>
+        <tr>
+          <th>Control ID</th>
+          <th>NRB Clause</th>
+          <th>Document</th>
+          <th>Status</th>
+          <th>Weight</th>
+          <th>Violations Found</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><strong>NRB-001</strong></td>
+          <td>Section 6.4 - Patch Management</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-fail">FAIL</span>
+            
+          </td>
+          <td><span class="weight-badge">10/10</span></td>
+          <td>
+            
+              <span class="violation-tag">trivy_critical_cves</span>
+            
+              <span class="violation-tag">trivy_high_cves</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-002</strong></td>
+          <td>Section 6.5 - Vulnerability Assessment</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-fail">FAIL</span>
+            
+          </td>
+          <td><span class="weight-badge">7/10</span></td>
+          <td>
+            
+              <span class="violation-tag">trivy_medium_cves</span>
+            
+              <span class="violation-tag">trivy_unfixed_cves</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-003</strong></td>
+          <td>Section 5.1 - Access Control and Least Privilege</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">9/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-004</strong></td>
+          <td>Section 5.3 - Privileged Account Management</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">8/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-005</strong></td>
+          <td>Section 7.1 - Network Security</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">8/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-006</strong></td>
+          <td>Section 4.2 - Secure Communication</td>
+          <td><small>Digital Payment Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">10/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-007</strong></td>
+          <td>Section 3.1 - Credential Management</td>
+          <td><small>Digital Payment Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">10/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-008</strong></td>
+          <td>Section 5.6 - Cryptographic Controls</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">9/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-009</strong></td>
+          <td>Section 9.2 - Third Party and Supply Chain Risk</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">8/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-010</strong></td>
+          <td>Section 4.4 - Technology Risk</td>
+          <td><small>Risk Management Guidelines</small></td>
+          <td>
+            
+              <span class="status-fail">FAIL</span>
+            
+          </td>
+          <td><span class="weight-badge">7/10</span></td>
+          <td>
+            
+              <span class="violation-tag">trivy_os_cves</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-011</strong></td>
+          <td>Section 8.1 - Audit Logging and Monitoring</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">6/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong>NRB-012</strong></td>
+          <td>Section 6.2 - Secure Configuration Management</td>
+          <td><small>ICT Security Guidelines</small></td>
+          <td>
+            
+              <span class="status-pass">PASS</span>
+            
+          </td>
+          <td><span class="weight-badge">7/10</span></td>
+          <td>
+            
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AI REMEDIATION ADVISORIES -->
+  
+  <div class="section">
+    <div class="section-title">AI-Generated Remediation Advisories</div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-001 — Section 6.4 - Patch Management</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_critical_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment.</p>
+            <div class="code-block"># See NRB remediation guidance</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>Addresses Section 6.4 - Patch Management</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-001 — Section 6.4 - Patch Management</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_high_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment.</p>
+            <div class="code-block"># See NRB remediation guidance</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>Addresses Section 6.4 - Patch Management</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-002 — Section 6.5 - Vulnerability Assessment</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_medium_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Update Docker image to use a patched version of the affected package, specifically by adding a patch version in the Dockerfile's FROM instruction.</p>
+            <div class="code-block">FROM image:latest WITH patches FROM image:patched-version</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>This fix aligns with Section 6.5 of the NRB clause, which requires regular vulnerability assessments and remediation by severity.</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Ignoring this vulnerability could lead to a significant breach in the security of Nepal's payment processing systems, compromising the trust and confidence of its citizens.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-002 — Section 6.5 - Vulnerability Assessment</span>
+        <span class="doc-badge">ICT Security Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_unfixed_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Update Docker image to version 1.0.2 or higher, which includes the patch for CVE-2022-4294</p>
+            <div class="code-block">FROM python:3.9-slim as build
+  RUN pip install --upgrade setuptools and pip</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>This update aligns with Section 6.5 of NRB's vulnerability assessment requirement</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Ignoring this fix would expose the Nepal Rastra Bank's payment processing system to exploitation by attackers</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="advisory-card">
+      <div class="advisory-header">
+        <span class="clause">NRB-010 — Section 4.4 - Technology Risk</span>
+        <span class="doc-badge">Risk Management Guidelines</span>
+      </div>
+      <div class="advisory-body">
+        <small style="color:#888;">Violation: <code>trivy_os_cves</code></small>
+        <div class="advisory-grid">
+          <div class="advisory-item">
+            <h4>Immediate Fix</h4>
+            <p>Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages.</p>
+            <div class="code-block"># See NRB remediation guidance</div>
+          </div>
+          <div class="advisory-item">
+            <h4>NRB Justification</h4>
+            <p>Addresses Section 4.4 - Technology Risk</p>
+            <h4 style="margin-top:15px;">Risk if Ignored</h4>
+            <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+
+  <!-- AI EXECUTIVE NARRATIVE -->
+  
+  <div class="section">
+    <div class="section-title">AI Executive Compliance Narrative</div>
+    <div class="narrative-box">**NRB Compliance Report**
+
+**Executive Summary**
+
+Our NRB compliance report shows a score of 75.8%, indicating a moderate level of adherence to the regulations. While we have made progress in some areas, there are significant concerns in others.
+
+**Key Risks**
+
+Critical CVEs: 9 - Unpatched vulnerabilities pose a high risk to our systems and data.
+High CVEs: 106 - Many unaddressed vulnerabilities indicate inadequate vulnerability management.
+Failed NRB Controls:
+- Section 6.4: Patch Management - Inadequate patching practices leave us vulnerable.
+- Section 6.5: Vulnerability Assessment - Insufficient assessment of vulnerabilities puts our systems at risk.
+- Section 4.4: Technology Risk - Inadequate technology risk management exposes us to potential threats.
+
+**Top 3 Actions**
+
+1. Implement a robust patch management process to address Critical CVEs.
+2. Conduct thorough vulnerability assessments and address High CVEs promptly.
+3. Enhance technology risk management practices to mitigate potential threats.
+
+**Conclusion**
+
+We acknowledge the areas for improvement and are committed to addressing them. By taking proactive steps, we aim to increase our NRB compliance score and ensure the security of our systems and data.</div>
+  </div>
+  
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  NRB Container Compliance Pipeline &mdash;
+  BSc Cybersecurity and Ethical Hacking Thesis &mdash;
+  Kathmandu, Nepal
+</div>
+
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NRBShield — {{ data.image }}</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:#0d1117; color:#e6edf3; }
+.navbar { background:#161b22; border-bottom:1px solid #30363d; padding:16px 32px; display:flex; align-items:center; gap:16px; }
+.navbar .logo { font-size:1.4em; font-weight:700; color:#58a6ff; }
+.navbar .logo span { color:#e94560; }
+.navbar a { color:#8b949e; text-decoration:none; font-size:0.9em; margin-left:auto; }
+.navbar a:hover { color:#e6edf3; }
+.container { max-width:1200px; margin:0 auto; padding:32px 20px; }
+
+.page-title { font-size:1.5em; font-weight:700; margin-bottom:6px; }
+.page-sub { color:#8b949e; margin-bottom:32px; font-size:0.9em; }
+
+/* Score row */
+.score-row { display:grid; grid-template-columns:200px repeat(4, 1fr); gap:16px; margin-bottom:32px; }
+.card { background:#161b22; border:1px solid #30363d; border-radius:12px; padding:20px; text-align:center; }
+.card .num { font-size:2.5em; font-weight:700; }
+.card .lbl { font-size:0.78em; color:#8b949e; margin-top:4px; text-transform:uppercase; }
+.score-green { color:#3fb950; }
+.score-amber { color:#e3b341; }
+.score-red   { color:#f85149; }
+.cve-c { color:#f85149; } .cve-h { color:#e3b341; }
+.cve-m { color:#d29922; } .cve-l { color:#8b949e; }
+
+/* Controls table */
+.section-title { font-size:0.85em; font-weight:600; color:#8b949e; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; margin-top:32px; }
+table { width:100%; border-collapse:collapse; background:#161b22; border:1px solid #30363d; border-radius:12px; overflow:hidden; }
+th { background:#21262d; padding:10px 14px; text-align:left; font-size:0.78em; color:#8b949e; text-transform:uppercase; }
+td { padding:12px 14px; border-bottom:1px solid #21262d; font-size:0.88em; }
+tr:last-child td { border-bottom:none; }
+.pass { background:#033a16; color:#3fb950; padding:3px 10px; border-radius:12px; font-size:0.8em; font-weight:600; }
+.fail { background:#3d0000; color:#f85149; padding:3px 10px; border-radius:12px; font-size:0.8em; font-weight:600; }
+.vtag { background:#1f2d3d; color:#79c0ff; padding:2px 8px; border-radius:4px; font-size:0.78em; font-family:monospace; margin:2px; display:inline-block; }
+
+/* AI cards */
+.ai-card { background:#161b22; border:1px solid #30363d; border-left:4px solid #e94560; border-radius:12px; padding:20px; margin-bottom:16px; }
+.ai-card h3 { font-size:0.9em; color:#58a6ff; margin-bottom:4px; }
+.ai-card .doc { font-size:0.78em; color:#8b949e; margin-bottom:16px; }
+.ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ai-item h4 { font-size:0.75em; text-transform:uppercase; color:#8b949e; margin-bottom:6px; }
+.ai-item p { font-size:0.88em; line-height:1.6; }
+.code-block { background:#0d1117; border:1px solid #30363d; border-radius:6px; padding:10px 14px; font-family:monospace; font-size:0.82em; color:#79c0ff; white-space:pre-wrap; margin-top:6px; }
+.risk-box { background:#3d0000; border-radius:6px; padding:10px 14px; font-size:0.85em; color:#f85149; margin-top:6px; line-height:1.5; }
+
+/* Narrative */
+.narrative { background:#161b22; border:1px solid #30363d; border-radius:12px; padding:24px; white-space:pre-wrap; line-height:1.8; font-size:0.92em; color:#c9d1d9; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo">NRB<span>Shield</span></div>
+  <a href="/">← Back to Dashboard</a>
+</nav>
+<div class="container">
+  <div class="page-title">{{ data.image }}</div>
+  <div class="page-sub">Scanned: {{ data.scan_time }}</div>
+
+  <!-- Score Row -->
+  {% set score = data.nrb_compliance.compliance_score %}
+  <div class="score-row">
+    <div class="card">
+      {% if score >= 80 %}
+        <div class="num score-green">{{ score }}%</div>
+      {% elif score >= 50 %}
+        <div class="num score-amber">{{ score }}%</div>
+      {% else %}
+        <div class="num score-red">{{ score }}%</div>
+      {% endif %}
+      <div class="lbl">NRB Compliance Score</div>
+    </div>
+    <div class="card"><div class="num cve-c">{{ data.cve_counts.CRITICAL }}</div><div class="lbl">Critical CVEs</div></div>
+    <div class="card"><div class="num cve-h">{{ data.cve_counts.HIGH }}</div><div class="lbl">High CVEs</div></div>
+    <div class="card"><div class="num cve-m">{{ data.cve_counts.MEDIUM }}</div><div class="lbl">Medium CVEs</div></div>
+    <div class="card"><div class="num cve-l">{{ data.cve_counts.LOW }}</div><div class="lbl">Low CVEs</div></div>
+  </div>
+
+  <!-- NRB Controls -->
+  <div class="section-title">NRB Control Compliance</div>
+  <table>
+    <thead>
+      <tr><th>ID</th><th>NRB Clause</th><th>Document</th><th>Status</th><th>Violations</th></tr>
+    </thead>
+    <tbody>
+      {% for c in data.nrb_compliance.controls %}
+      <tr>
+        <td><strong>{{ c.id }}</strong></td>
+        <td>{{ c.nrb_clause }}</td>
+        <td><small style="color:#8b949e">{{ c.nrb_document }}</small></td>
+        <td>{% if c.compliant %}<span class="pass">PASS</span>{% else %}<span class="fail">FAIL</span>{% endif %}</td>
+        <td>{% for v in c.violations %}<span class="vtag">{{ v }}</span>{% endfor %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- AI Advisories -->
+  {% if data.ai_advisories %}
+  <div class="section-title">AI Remediation Advisories</div>
+  {% for item in data.ai_advisories %}
+  <div class="ai-card">
+    <h3>{{ item.nrb_id }} — {{ item.nrb_clause }}</h3>
+    <div class="doc">{{ item.nrb_document }} &nbsp;·&nbsp; <code style="color:#8b949e">{{ item.violation }}</code></div>
+    <div class="ai-grid">
+      <div class="ai-item">
+        <h4>Immediate Fix</h4>
+        <p>{{ item.advisory.immediate_fix }}</p>
+        <div class="code-block">{{ item.advisory.code_example }}</div>
+      </div>
+      <div class="ai-item">
+        <h4>NRB Justification</h4>
+        <p>{{ item.advisory.nrb_justification }}</p>
+        <h4 style="margin-top:14px">Risk if Ignored</h4>
+        <div class="risk-box">{{ item.advisory.risk_if_ignored }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- Executive Narrative -->
+  {% if data.ai_narrative %}
+  <div class="section-title">AI Executive Compliance Narrative</div>
+  <div class="narrative">{{ data.ai_narrative }}</div>
+  {% endif %}
+
+</div>
+</body>
+</html>

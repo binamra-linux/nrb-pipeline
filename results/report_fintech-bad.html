@@ -3,439 +3,438 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NRB Compliance Report — fintech-bad</title>
+<title>NRBShield — fintech-bad</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
-
-  .header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: white; padding: 40px;
-    border-bottom: 4px solid #e94560;
-  }
-  .header h1 { font-size: 1.8em; margin-bottom: 8px; }
-  .header .subtitle { opacity: 0.8; font-size: 0.95em; }
-  .header .meta { margin-top: 15px; opacity: 0.7; font-size: 0.85em; }
-
-  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-  /* Score Card */
-  .score-section {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 25px; margin-bottom: 30px;
-  }
-  .score-card {
-    background: white; border-radius: 16px;
-    padding: 35px; text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .score-number {
-    font-size: 4.5em; font-weight: 700; line-height: 1;
-    margin-bottom: 8px;
-  }
-  .score-label { font-size: 0.95em; color: #666; margin-bottom: 15px; }
-  .score-badge {
-    display: inline-block; padding: 6px 18px;
-    border-radius: 20px; font-weight: 600; font-size: 0.9em;
-  }
-  .score-red    { color: #e74c3c; }
-  .score-amber  { color: #f39c12; }
-  .score-green  { color: #27ae60; }
-  .badge-red    { background: #fdecea; color: #e74c3c; }
-  .badge-amber  { background: #fef9e7; color: #f39c12; }
-  .badge-green  { background: #eafaf1; color: #27ae60; }
-
-  /* CVE Stats */
-  .cve-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-  }
-  .cve-card {
-    background: white; border-radius: 12px;
-    padding: 20px; text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .cve-card .count { font-size: 2.5em; font-weight: 700; }
-  .cve-card .label { font-size: 0.8em; color: #666; margin-top: 4px; }
-  .cve-critical { border-top: 4px solid #e74c3c; }
-  .cve-high     { border-top: 4px solid #e67e22; }
-  .cve-medium   { border-top: 4px solid #f1c40f; }
-  .cve-low      { border-top: 4px solid #2ecc71; }
-  .cve-critical .count { color: #e74c3c; }
-  .cve-high     .count { color: #e67e22; }
-  .cve-medium   .count { color: #f1c40f; }
-  .cve-low      .count { color: #2ecc71; }
-
-  /* Section headings */
-  .section { margin-bottom: 30px; }
-  .section-title {
-    font-size: 1.2em; font-weight: 700;
-    margin-bottom: 15px; padding-bottom: 10px;
-    border-bottom: 2px solid #e94560;
-    color: #1a1a2e;
-  }
-
-  /* NRB Controls Table */
-  .controls-table {
-    width: 100%; border-collapse: collapse;
-    background: white; border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .controls-table th {
-    background: #1a1a2e; color: white;
-    padding: 14px 16px; text-align: left;
-    font-size: 0.85em; text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .controls-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid #f0f2f5;
-    font-size: 0.9em; vertical-align: top;
-  }
-  .controls-table tr:last-child td { border-bottom: none; }
-  .controls-table tr:hover td { background: #f8f9ff; }
-
-  .status-pass {
-    display: inline-block; padding: 4px 12px;
-    background: #eafaf1; color: #27ae60;
-    border-radius: 20px; font-weight: 600; font-size: 0.85em;
-  }
-  .status-fail {
-    display: inline-block; padding: 4px 12px;
-    background: #fdecea; color: #e74c3c;
-    border-radius: 20px; font-weight: 600; font-size: 0.85em;
-  }
-  .weight-badge {
-    display: inline-block; padding: 3px 10px;
-    background: #eef2ff; color: #4a6cf7;
-    border-radius: 10px; font-size: 0.8em; font-weight: 600;
-  }
-  .violation-tag {
-    display: inline-block; padding: 2px 8px;
-    background: #fff3cd; color: #856404;
-    border-radius: 6px; font-size: 0.78em;
-    margin: 2px; font-family: monospace;
-  }
-
-  /* AI Advisories */
-  .advisory-card {
-    background: white; border-radius: 12px;
-    margin-bottom: 20px; overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border-left: 5px solid #e94560;
-  }
-  .advisory-header {
-    background: #f8f9ff; padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex; justify-content: space-between;
-    align-items: center;
-  }
-  .advisory-header .clause {
-    font-weight: 600; color: #1a1a2e; font-size: 0.95em;
-  }
-  .advisory-header .doc-badge {
-    font-size: 0.78em; padding: 3px 10px;
-    background: #e8eaf6; color: #3949ab;
-    border-radius: 10px;
-  }
-  .advisory-body { padding: 20px; }
-  .advisory-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px; margin-top: 15px;
-  }
-  .advisory-item h4 {
-    font-size: 0.8em; text-transform: uppercase;
-    color: #888; margin-bottom: 6px; letter-spacing: 0.5px;
-  }
-  .advisory-item p { font-size: 0.9em; color: #333; line-height: 1.5; }
-  .code-block {
-    background: #1a1a2e; color: #a8ff78;
-    padding: 12px 16px; border-radius: 8px;
-    font-family: monospace; font-size: 0.85em;
-    white-space: pre-wrap; margin-top: 6px;
-  }
-  .risk-box {
-    background: #fdecea; border-radius: 8px;
-    padding: 12px 16px; margin-top: 6px;
-    font-size: 0.88em; color: #c0392b; line-height: 1.5;
-  }
-
-  /* Executive Narrative */
-  .narrative-box {
-    background: white; border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    line-height: 1.8; font-size: 0.95em; color: #333;
-    white-space: pre-wrap;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center; padding: 30px;
-    color: #999; font-size: 0.85em;
-    border-top: 1px solid #e0e0e0; margin-top: 20px;
-  }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#0d1117; --bg2:#161b22; --bg3:#21262d; --border:#30363d;
+  --text:#e6edf3; --muted:#8b949e; --blue:#58a6ff; --green:#3fb950;
+  --yellow:#e3b341; --red:#f85149; --orange:#d29922; --purple:#bc8cff; --accent:#e94560;
+}
+body { font-family:'Segoe UI',system-ui,Arial,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:14px; }
+.nav { background:var(--bg2); border-bottom:1px solid var(--border); padding:14px 32px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+.nav-logo { font-size:1.3em; font-weight:800; color:var(--blue); letter-spacing:-0.5px; }
+.nav-logo span { color:var(--accent); }
+.nav-tag { background:var(--bg3); color:var(--muted); font-size:0.75em; padding:3px 10px; border-radius:20px; border:1px solid var(--border); }
+.nav-right { margin-left:auto; color:var(--muted); font-size:0.82em; }
+.wrap { max-width:1280px; margin:0 auto; padding:28px 24px; }
+.hero { background:linear-gradient(135deg,#0d1117 0%,#161b22 60%,#1a1f2e 100%); border:1px solid var(--border); border-radius:16px; padding:32px; margin-bottom:24px; display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; }
+.hero-image { font-size:1.6em; font-weight:700; word-break:break-all; margin-bottom:6px; }
+.hero-meta { color:var(--muted); font-size:0.85em; display:flex; gap:20px; flex-wrap:wrap; }
+.hero-score { font-size:4em; font-weight:800; line-height:1; }
+.hero-score-label { font-size:0.78em; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+.hero-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:0.82em; font-weight:700; }
+.c-green{color:var(--green);} .bg-green{background:#033a16;color:var(--green);border:1px solid #238636;}
+.c-amber{color:var(--yellow);} .bg-amber{background:#272115;color:var(--yellow);border:1px solid #9e6a03;}
+.c-red{color:var(--red);} .bg-red{background:#3d0000;color:var(--red);border:1px solid #b91c1c;}
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.stat { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+.stat-num { font-size:1.9em; font-weight:800; line-height:1; }
+.stat-lbl { font-size:0.75em; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.stat-crit{border-top:3px solid var(--red);} .stat-high{border-top:3px solid var(--orange);} .stat-med{border-top:3px solid var(--yellow);} .stat-low{border-top:3px solid var(--muted);}
+.section { margin-bottom:28px; }
+.section-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.section-head h2 { font-size:0.95em; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+.section-head .count { background:var(--bg3); color:var(--muted); font-size:0.78em; padding:2px 8px; border-radius:10px; }
+.tbl { width:100%; border-collapse:collapse; background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.tbl th { background:var(--bg3); padding:10px 14px; text-align:left; font-size:0.75em; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:600; }
+.tbl td { padding:12px 14px; border-bottom:1px solid var(--bg3); font-size:0.88em; vertical-align:top; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl tr:hover td { background:#1c2128; }
+.pill { display:inline-block; padding:3px 10px; border-radius:12px; font-size:0.78em; font-weight:700; }
+.pill-pass{background:#033a16;color:var(--green);} .pill-fail{background:#3d0000;color:var(--red);}
+.vtag { display:inline-block; background:#1f2d3d; color:#79c0ff; padding:2px 7px; border-radius:4px; font-size:0.75em; font-family:monospace; margin:2px; }
+.progress-wrap { background:var(--bg3); border-radius:4px; height:6px; margin-top:6px; overflow:hidden; }
+.progress-bar { height:100%; border-radius:4px; }
+.sev-badge { display:inline-block; padding:2px 9px; border-radius:6px; font-size:0.75em; font-weight:700; text-transform:uppercase; }
+.sev-CRITICAL{background:#3d0000;color:var(--red);} .sev-HIGH{background:#2d1a00;color:var(--orange);}
+.sev-MEDIUM{background:#2d2200;color:var(--yellow);} .sev-LOW{background:#1a1a1a;color:var(--muted);}
+.cve-id { font-family:monospace; font-size:0.82em; color:var(--blue); }
+.pkg    { font-family:monospace; font-size:0.82em; color:var(--purple); }
+.fix-yes{color:var(--green);font-size:0.8em;} .fix-no{color:var(--muted);font-size:0.8em;}
+.hl-card { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--yellow); border-radius:10px; padding:14px 18px; margin-bottom:10px; display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; }
+.hl-code { font-family:monospace; font-size:0.82em; background:var(--bg3); color:var(--yellow); padding:3px 8px; border-radius:6px; white-space:nowrap; }
+.hl-msg  { font-size:0.88em; line-height:1.5; }
+.hl-line { font-size:0.78em; color:var(--muted); white-space:nowrap; }
+.ai-card { background:var(--bg2); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:12px; margin-bottom:16px; overflow:hidden; }
+.ai-card-head { background:var(--bg3); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.ai-card-head .clause { font-weight:700; color:var(--blue); font-size:0.9em; }
+.doc-pill { background:var(--bg2); color:var(--muted); font-size:0.75em; padding:3px 10px; border-radius:10px; border:1px solid var(--border); white-space:nowrap; }
+.ai-card-body { padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.ai-item h4 { font-size:0.72em; text-transform:uppercase; color:var(--muted); letter-spacing:0.8px; margin-bottom:6px; }
+.ai-item p  { font-size:0.87em; line-height:1.6; }
+.code-block { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-family:monospace; font-size:0.8em; color:#79c0ff; white-space:pre-wrap; margin-top:6px; line-height:1.6; }
+.risk-box   { background:#1a0a0a; border:1px solid #5a1a1a; border-radius:6px; padding:10px 14px; font-size:0.85em; color:#f87171; margin-top:6px; line-height:1.6; }
+.vtag-sm    { font-family:monospace; font-size:0.75em; color:var(--muted); background:var(--bg3); padding:1px 6px; border-radius:4px; }
+.narrative  { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:26px; line-height:1.9; font-size:0.9em; color:#c9d1d9; white-space:pre-wrap; }
+.footer { text-align:center; padding:28px; color:var(--muted); font-size:0.8em; border-top:1px solid var(--border); margin-top:12px; }
+.footer strong { color:var(--blue); }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <h1>NRB Container Compliance Report</h1>
-  <div class="subtitle">Nepal Rastra Bank ICT Security Guidelines — Container Image Assessment</div>
-  <div class="meta">
-    Image: <strong>fintech-bad</strong> &nbsp;|&nbsp;
-    Scanned: <strong>2026-05-01 14:27:36</strong>
-  </div>
-</div>
+<nav class="nav">
+  <div class="nav-logo">NRB<span>Shield</span></div>
+  <span class="nav-tag">Container Compliance Pipeline</span>
+  <div class="nav-right">Kathmandu, Nepal &nbsp;·&nbsp; BSc Cybersecurity &amp; Ethical Hacking</div>
+</nav>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- SCORE + CVE SUMMARY -->
-  <div class="score-section">
-
-    <!-- Compliance Score -->
-    <div class="score-card">
-      
-      
-        <div class="score-number score-amber">59.6%</div>
-        <div class="score-label">NRB Compliance Score</div>
-        <span class="score-badge badge-amber">PARTIAL</span>
-      
+  <div class="hero">
+    <div>
+      <div class="hero-image">fintech-bad</div>
+      <div class="hero-meta">
+        <span>Scanned: 2026-05-02 11:47:22</span>
+        <span>Nepal Rastra Bank ICT Security Guidelines</span>
+        <span>12 Controls Evaluated</span>
+      </div>
     </div>
-
-    <!-- CVE Counts -->
-    <div class="cve-grid">
-      <div class="cve-card cve-critical">
-        <div class="count">1</div>
-        <div class="label">CRITICAL CVEs</div>
-      </div>
-      <div class="cve-card cve-high">
-        <div class="count">8</div>
-        <div class="label">HIGH CVEs</div>
-      </div>
-      <div class="cve-card cve-medium">
-        <div class="count">30</div>
-        <div class="label">MEDIUM CVEs</div>
-      </div>
-      <div class="cve-card cve-low">
-        <div class="count">2</div>
-        <div class="label">LOW CVEs</div>
-      </div>
+    <div style="text-align:center">
+      
+      
+        <div class="hero-score c-amber">59.6%</div>
+        <div class="hero-score-label">NRB Compliance Score</div>
+        <span class="hero-badge bg-amber">⚠ PARTIAL</span>
+      
     </div>
   </div>
 
-  <!-- NRB CONTROLS TABLE -->
+  <div class="stats">
+    <div class="stat stat-crit">
+      <div style="font-size:1.8em">🔴</div>
+      <div><div class="stat-num c-red">1</div><div class="stat-lbl">Critical CVEs</div></div>
+    </div>
+    <div class="stat stat-high">
+      <div style="font-size:1.8em">🟠</div>
+      <div><div class="stat-num" style="color:var(--orange)">8</div><div class="stat-lbl">High CVEs</div></div>
+    </div>
+    <div class="stat stat-med">
+      <div style="font-size:1.8em">🟡</div>
+      <div><div class="stat-num c-amber">30</div><div class="stat-lbl">Medium CVEs</div></div>
+    </div>
+    <div class="stat stat-low">
+      <div style="font-size:1.8em">⚪</div>
+      <div><div class="stat-num" style="color:var(--muted)">2</div><div class="stat-lbl">Low CVEs</div></div>
+    </div>
+  </div>
+
   <div class="section">
-    <div class="section-title">NRB Control Compliance Status</div>
-    <table class="controls-table">
+    <div class="section-head">
+      <h2>NRB Control Compliance Status</h2>
+      <span class="count">
+        7 passed /
+        5 failed
+      </span>
+    </div>
+    <table class="tbl">
       <thead>
         <tr>
-          <th>Control ID</th>
-          <th>NRB Clause</th>
-          <th>Document</th>
-          <th>Status</th>
-          <th>Weight</th>
-          <th>Violations Found</th>
+          <th>ID</th><th>NRB Clause</th><th>Document</th>
+          <th>Weight</th><th>Status</th><th>Violations</th><th>Remediation Hint</th>
         </tr>
       </thead>
       <tbody>
         
         <tr>
-          <td><strong>NRB-001</strong></td>
-          <td>Section 6.4 - Patch Management</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-001</strong></td>
           <td>
-            
-              <span class="status-fail">FAIL</span>
+            Section 6.4 - Patch Management
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">All software components must be current. End-of-life software must not be used i...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">10/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:100%;background:var(--red)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-fail">✗ FAIL</span>
+          </td>
+          <td>
+            <span class="vtag">trivy_critical_cves</span>
+            <span class="vtag">trivy_high_cves</span>
             
           </td>
-          <td><span class="weight-badge">10/10</span></td>
-          <td>
-            
-              <span class="violation-tag">trivy_critical_cves</span>
-            
-              <span class="violation-tag">trivy_high_cves</span>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td><strong>NRB-002</strong></td>
-          <td>Section 6.5 - Vulnerability Assessment</td>
-          <td><small>ICT Security Guidelines</small></td>
-          <td>
-            
-              <span class="status-fail">FAIL</span>
-            
-          </td>
-          <td><span class="weight-badge">7/10</span></td>
-          <td>
-            
-              <span class="violation-tag">trivy_medium_cves</span>
-            
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            Use a current supported base image. Pin to a specific version tag. Res...
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-003</strong></td>
-          <td>Section 5.1 - Access Control and Least Privilege</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-002</strong></td>
           <td>
-            
-              <span class="status-fail">FAIL</span>
+            Section 6.5 - Vulnerability Assessment
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Regular vulnerability assessments must be conducted and findings remediated by s...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">7/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:70%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-fail">✗ FAIL</span>
+          </td>
+          <td>
+            <span class="vtag">trivy_medium_cves</span>
             
           </td>
-          <td><span class="weight-badge">9/10</span></td>
-          <td>
-            
-              <span class="violation-tag">hadolint_DL3002</span>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td><strong>NRB-004</strong></td>
-          <td>Section 5.3 - Privileged Account Management</td>
-          <td><small>ICT Security Guidelines</small></td>
-          <td>
-            
-              <span class="status-pass">PASS</span>
-            
-          </td>
-          <td><span class="weight-badge">8/10</span></td>
-          <td>
-            
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            Document all unfixed CVEs with justification. Upgrade packages where f...
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-005</strong></td>
-          <td>Section 7.1 - Network Security</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-003</strong></td>
           <td>
-            
-              <span class="status-pass">PASS</span>
+            Section 5.1 - Access Control and Least Privilege
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">No service or process should operate with more permissions than required for its...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">9/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:90%;background:var(--red)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-fail">✗ FAIL</span>
+          </td>
+          <td>
+            <span class="vtag">hadolint_DL3002</span>
             
           </td>
-          <td><span class="weight-badge">8/10</span></td>
-          <td>
-            
-          </td>
-        </tr>
-        
-        <tr>
-          <td><strong>NRB-006</strong></td>
-          <td>Section 4.2 - Secure Communication</td>
-          <td><small>Digital Payment Security Guidelines</small></td>
-          <td>
-            
-              <span class="status-pass">PASS</span>
-            
-          </td>
-          <td><span class="weight-badge">10/10</span></td>
-          <td>
-            
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            Add a non-root USER instruction in your Dockerfile. Create a dedicated...
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-007</strong></td>
-          <td>Section 3.1 - Credential Management</td>
-          <td><small>Digital Payment Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-004</strong></td>
           <td>
-            
-              <span class="status-pass">PASS</span>
+            Section 5.3 - Privileged Account Management
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Privileged access must be tightly controlled and restricted to business need onl...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">8/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:80%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
           </td>
-          <td><span class="weight-badge">10/10</span></td>
           <td>
-            
+            <span style="color:var(--green);font-size:0.82em">None</span>
           </td>
-        </tr>
-        
-        <tr>
-          <td><strong>NRB-008</strong></td>
-          <td>Section 5.6 - Cryptographic Controls</td>
-          <td><small>ICT Security Guidelines</small></td>
-          <td>
-            
-              <span class="status-pass">PASS</span>
-            
-          </td>
-          <td><span class="weight-badge">9/10</span></td>
-          <td>
-            
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-009</strong></td>
-          <td>Section 9.2 - Third Party and Supply Chain Risk</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-005</strong></td>
           <td>
-            
-              <span class="status-pass">PASS</span>
+            Section 7.1 - Network Security
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Unnecessary network services must be disabled. Only required ports should be ope...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">8/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:80%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
           </td>
-          <td><span class="weight-badge">8/10</span></td>
           <td>
-            
+            <span style="color:var(--green);font-size:0.82em">None</span>
           </td>
-        </tr>
-        
-        <tr>
-          <td><strong>NRB-010</strong></td>
-          <td>Section 4.4 - Technology Risk</td>
-          <td><small>Risk Management Guidelines</small></td>
-          <td>
-            
-              <span class="status-fail">FAIL</span>
-            
-          </td>
-          <td><span class="weight-badge">7/10</span></td>
-          <td>
-            
-              <span class="violation-tag">trivy_os_cves</span>
-            
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-011</strong></td>
-          <td>Section 8.1 - Audit Logging and Monitoring</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-006</strong></td>
           <td>
-            
-              <span class="status-pass">PASS</span>
+            Section 4.2 - Secure Communication
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">All communication between payment components must be encrypted. Unencrypted prot...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">Digital Payment Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">10/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:100%;background:var(--red)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
           </td>
-          <td><span class="weight-badge">6/10</span></td>
           <td>
-            
+            <span style="color:var(--green);font-size:0.82em">None</span>
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
           </td>
         </tr>
         
         <tr>
-          <td><strong>NRB-012</strong></td>
-          <td>Section 6.2 - Secure Configuration Management</td>
-          <td><small>ICT Security Guidelines</small></td>
+          <td><strong style="color:var(--blue)">NRB-007</strong></td>
           <td>
-            
-              <span class="status-fail">FAIL</span>
+            Section 3.1 - Credential Management
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Credentials, API keys, and cryptographic keys must not be hardcoded in source co...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">Digital Payment Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">10/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:100%;background:var(--red)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
           </td>
-          <td><span class="weight-badge">7/10</span></td>
           <td>
+            <span style="color:var(--green);font-size:0.82em">None</span>
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color:var(--blue)">NRB-008</strong></td>
+          <td>
+            Section 5.6 - Cryptographic Controls
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Strong approved cryptographic algorithms must be used. Deprecated algorithms mus...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">9/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:90%;background:var(--red)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
-              <span class="violation-tag">hadolint_DL3008</span>
+          </td>
+          <td>
+            <span style="color:var(--green);font-size:0.82em">None</span>
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color:var(--blue)">NRB-009</strong></td>
+          <td>
+            Section 9.2 - Third Party and Supply Chain Risk
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Risks from third-party software components and vendor-supplied systems must be a...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">8/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:80%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
             
-              <span class="violation-tag">hadolint_DL3009</span>
+          </td>
+          <td>
+            <span style="color:var(--green);font-size:0.82em">None</span>
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color:var(--blue)">NRB-010</strong></td>
+          <td>
+            Section 4.4 - Technology Risk
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Risks from open-source components, outdated libraries, and unverified software m...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">Risk Management Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">7/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:70%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-fail">✗ FAIL</span>
+          </td>
+          <td>
+            <span class="vtag">trivy_os_cves</span>
             
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            Regularly rebuild images to pick up updated packages. Use --no-install...
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color:var(--blue)">NRB-011</strong></td>
+          <td>
+            Section 8.1 - Audit Logging and Monitoring
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">All security-relevant events must be logged. Systems must be observable and moni...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">6/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:60%;background:var(--green)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-pass">✓ PASS</span>
+            
+          </td>
+          <td>
+            <span style="color:var(--green);font-size:0.82em">None</span>
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            —
+          </td>
+        </tr>
+        
+        <tr>
+          <td><strong style="color:var(--blue)">NRB-012</strong></td>
+          <td>
+            Section 6.2 - Secure Configuration Management
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">Systems must be configured securely. Default configurations must be reviewed and...</div>
+          </td>
+          <td><span style="color:var(--muted);font-size:0.8em">ICT Security Guidelines</span></td>
+          <td>
+            <div style="font-weight:700">7/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:70%;background:var(--yellow)"></div>
+            </div>
+          </td>
+          <td>
+            <span class="pill pill-fail">✗ FAIL</span>
+          </td>
+          <td>
+            <span class="vtag">hadolint_DL3008</span>
+            <span class="vtag">hadolint_DL3009</span>
+            
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            Pin all apt/apk package versions. Clean package manager caches after i...
           </td>
         </tr>
         
@@ -443,171 +442,469 @@
     </table>
   </div>
 
-  <!-- AI REMEDIATION ADVISORIES -->
   
   <div class="section">
-    <div class="section-title">AI-Generated Remediation Advisories</div>
+    <div class="section-head">
+      <h2>Vulnerabilities Found</h2>
+      <span class="count">20 shown</span>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr><th>CVE ID</th><th>Package</th><th>Severity</th><th>Description</th><th>Fix Available</th></tr>
+      </thead>
+      <tbody>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">libpython3.6</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">libpython3.6-dev</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">libpython3.6-minimal</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">libpython3.6-stdlib</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">python3.6</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">python3.6-dev</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-24329</span></td>
+          <td><span class="pkg">python3.6-minimal</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python: urllib.parse url blocklisting bypass</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.6.9-1~18.04ubuntu1.13</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2019-1010083</span></td>
+          <td><span class="pkg">Flask</span></td>
+          <td><span class="sev-badge sev-HIGH">HIGH</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python-flask: unexpected memory usage can lead to denial of service via crafted encoded JSON data</td>
+          <td>
+            
+              <span class="fix-yes">✓ 1.0</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-30861</span></td>
+          <td><span class="pkg">Flask</span></td>
+          <td><span class="sev-badge sev-HIGH">HIGH</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">flask: Possible disclosure of permanent session cookie due to missing Vary: Cookie header</td>
+          <td>
+            
+              <span class="fix-yes">✓ 2.3.2, 2.2.5</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2026-27205</span></td>
+          <td><span class="pkg">Flask</span></td>
+          <td><span class="sev-badge sev-LOW">LOW</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">flask: Flask: Information disclosure via improper caching of session data</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.3</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-22195</span></td>
+          <td><span class="pkg">Jinja2</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">jinja2: HTML attribute injection when passing user input as keys to xmlattr filter</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.3</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-34064</span></td>
+          <td><span class="pkg">Jinja2</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">jinja2: accepts keys containing non-attribute characters</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.4</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-56201</span></td>
+          <td><span class="pkg">Jinja2</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">jinja2: Jinja has a sandbox breakout through malicious filenames</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.5</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-56326</span></td>
+          <td><span class="pkg">Jinja2</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">jinja2: Jinja has a sandbox breakout through indirect reference to format method</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.5</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2025-27516</span></td>
+          <td><span class="pkg">Jinja2</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">jinja2: Jinja sandbox breakout through attr filter selecting format method</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.1.6</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-25577</span></td>
+          <td><span class="pkg">Werkzeug</span></td>
+          <td><span class="sev-badge sev-HIGH">HIGH</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python-werkzeug: high resource usage when parsing multipart form data with many fields</td>
+          <td>
+            
+              <span class="fix-yes">✓ 2.2.3</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-34069</span></td>
+          <td><span class="pkg">Werkzeug</span></td>
+          <td><span class="sev-badge sev-HIGH">HIGH</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python-werkzeug: user may execute code on a developer's machine</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.0.3</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2023-46136</span></td>
+          <td><span class="pkg">Werkzeug</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">python-werkzeug: high resource consumption leading to denial of service</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.0.1, 2.3.8</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-49766</span></td>
+          <td><span class="pkg">Werkzeug</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">werkzeug: python-werkzeug: Werkzeug safe_join not safe on Windows</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.0.6</span>
+            
+          </td>
+        </tr>
+        
+        <tr>
+          <td><span class="cve-id">CVE-2024-49767</span></td>
+          <td><span class="pkg">Werkzeug</span></td>
+          <td><span class="sev-badge sev-MEDIUM">MEDIUM</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">werkzeug: python-werkzeug: Werkzeug possible resource exhaustion when parsing file data in forms</td>
+          <td>
+            
+              <span class="fix-yes">✓ 3.0.6</span>
+            
+          </td>
+        </tr>
+        
+      </tbody>
+    </table>
+  </div>
+  
+
+  
+  <div class="section">
+    <div class="section-head">
+      <h2>Dockerfile Issues</h2>
+      <span class="count">5 issues</span>
+    </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="hl-card">
+      <span class="hl-code">DL3008</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">DL3008</strong> — Pin versions in apt get install. Instead of `apt-get install <package>` use `apt-get install <package>=<version>`</div>
+      <span class="hl-line">Line 4</span>
+    </div>
+    
+    <div class="hl-card">
+      <span class="hl-code">DL3015</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">DL3015</strong> — Avoid additional packages by specifying `--no-install-recommends`</div>
+      <span class="hl-line">Line 4</span>
+    </div>
+    
+    <div class="hl-card">
+      <span class="hl-code">DL3009</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">DL3009</strong> — Delete the apt lists (/var/lib/apt/lists) after installing something</div>
+      <span class="hl-line">Line 4</span>
+    </div>
+    
+    <div class="hl-card">
+      <span class="hl-code">DL3042</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">DL3042</strong> — Avoid use of cache directory with pip. Use `pip install --no-cache-dir <package>`</div>
+      <span class="hl-line">Line 11</span>
+    </div>
+    
+    <div class="hl-card">
+      <span class="hl-code">DL3002</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">DL3002</strong> — Last USER should not be root</div>
+      <span class="hl-line">Line 23</span>
+    </div>
+    
+  </div>
+  
+
+  
+  <div class="section">
+    <div class="section-head">
+      <h2>AI Remediation Advisories</h2>
+      <span class="count">7 advisories</span>
+    </div>
+    
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-001 — Section 6.4 - Patch Management</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">trivy_critical_cves</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>trivy_critical_cves</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Update the base image to a current, supported version and pin it to a specific tag.</p>
-            <div class="code-block">FROM alpine:3.18
-# ... other Dockerfile instructions</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>Using a specific, up-to-date base image ensures all included software components are current and actively maintained, directly addressing the requirement for 'current' software and avoiding 'end-of-life' components.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">Exploiting critical vulnerabilities in outdated base image components could lead to unauthorized access to sensitive customer financial data, disruption of payment processing services, or even financial fraud, severely impacting customer trust and NRB compliance.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Use a current supported base image. Pin to a specific version tag. Resolve all CRITICAL CVEs before deployment.</p>
+          <div class="code-block"># See NRB remediation guidance</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>Addresses Section 6.4 - Patch Management</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-001 — Section 6.4 - Patch Management</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">trivy_high_cves</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>trivy_high_cves</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Update the `FROM` instruction in the Dockerfile to use a recent, officially supported base image version.</p>
-            <div class="code-block">FROM alpine:3.18
-# ... rest of your Dockerfile</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>This directly addresses the requirement for all software components to be current by ensuring the base operating system used in the container is actively maintained and patched by its vendor, preventing the use of end-of-life software.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">Running outdated software with known vulnerabilities in a payment processing system could lead to exploitation of these flaws, resulting in unauthorized access to sensitive customer financial data, fraudulent transactions, and severe reputational damage for the fintech startup.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Update Docker image to the latest version in the Dockerfile to ensure it matches the current software component.</p>
+          <div class="code-block">FROM python:3.9-slim as build
+# ...</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>This action aligns with Section 6.4 of the NRB's Patch Management clause, ensuring all software components are current and end-of-life software is not used in production.</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Ignoring this issue could lead to security vulnerabilities being exploited by attackers targeting Nepal's payment processing systems.</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-002 — Section 6.5 - Vulnerability Assessment</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">trivy_medium_cves</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>trivy_medium_cves</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Update the base image to a more recent version or explicitly upgrade the vulnerable package.</p>
-            <div class="code-block">FROM ubuntu:22.04
-RUN apt-get update && apt-get upgrade -y --no-install-recommends && apt-get clean && rm -rf /var/lib/apt/lists/*</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>This action directly addresses the NRB requirement by remediating identified vulnerabilities through package upgrades.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">Unpatched vulnerabilities could be exploited by attackers to compromise the payment processing system, leading to data breaches, financial fraud, and reputational damage, potentially violating NRB's data protection and operational integrity mandates.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Update Docker image to use a vulnerable version of the 'curl' package and then update it to the latest secure version in the same Dockerfile.</p>
+          <div class="code-block">FROM curl:latest -> FROM curl:1.3.2</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>This fix aligns with Section 6.5 of the NRB clause requiring vulnerability assessments to be conducted and findings remediated by severity.</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Ignoring this vulnerability could lead to a significant risk for Nepal's payment processing systems, compromising the security and integrity of financial transactions.</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-003 — Section 5.1 - Access Control and Least Privilege</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">hadolint_DL3002</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>hadolint_DL3002</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Add a non-root USER instruction to the Dockerfile.</p>
-            <div class="code-block">USER appuser</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>Running the application as a non-root user ensures that any compromise of the service will be limited by the reduced privileges of that user, adhering to the principle of least privilege.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">If the application runs as root, a vulnerability could allow an attacker to gain root access to the container, potentially compromising sensitive customer payment data, transaction logs, or even the underlying host system of the Nepali fintech, leading to financial fraud and regulatory penalties.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Modify the Dockerfile to use a specific, minimal image with limited permissions.</p>
+          <div class="code-block"># Use an official image with limited permissions
+FROM nginx:alpine</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>This change aligns with Section 5.1 of the NRB's guidelines for Access Control and Least Privilege.</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Failure to implement this fix could lead to unauthorized access to sensitive payment processing systems.</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-010 — Section 4.4 - Technology Risk</span>
-        <span class="doc-badge">Risk Management Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">trivy_os_cves</span>
+          <span class="doc-pill">Risk Management Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>trivy_os_cves</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Add a `RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*` command after installing packages to ensure all packages are up-to-date and only essential ones are installed.</p>
-            <div class="code-block">RUN apt-get update && apt-get upgrade -y --no-install-recommends && rm -rf /var/lib/apt/lists/*</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>This change directly addresses the NRB requirement by ensuring that open-source components and libraries within the container image are updated to their latest secure versions, thereby managing risks associated with outdated software.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">An outdated component in the payment processing container could contain a known vulnerability that attackers exploit, leading to unauthorized access to customer financial data, fraudulent transactions, and severe reputational damage for the fintech startup.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Regularly rebuild images to pick up updated packages. Use --no-install-recommends to minimise installed packages.</p>
+          <div class="code-block"># See NRB remediation guidance</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>Addresses Section 4.4 - Technology Risk</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-012 — Section 6.2 - Secure Configuration Management</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">hadolint_DL3008</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>hadolint_DL3008</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Modify the Dockerfile to explicitly specify package versions during installation using the '=' operator and add a command to clean the apt cache.</p>
-            <div class="code-block">RUN apt-get update && apt-get install -y --no-install-recommends package_name=1.2.3 && rm -rf /var/lib/apt/lists/*</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>Pinning package versions and cleaning caches ensures a predictable and hardened system configuration, directly addressing the NRB's requirement for secure configuration management.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">Using unpinned packages could introduce vulnerabilities through unexpected updates or dependencies, potentially exposing sensitive payment data to attackers and disrupting payment processing services.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages.</p>
+          <div class="code-block"># See NRB remediation guidance</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>Addresses Section 6.2 - Secure Configuration Management</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
         </div>
       </div>
     </div>
     
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">NRB-012 — Section 6.2 - Secure Configuration Management</span>
-        <span class="doc-badge">ICT Security Guidelines</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">hadolint_DL3009</span>
+          <span class="doc-pill">ICT Security Guidelines</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>hadolint_DL3009</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>Specify exact package versions for all apt-get installs and add a 'clean' command after installing packages.</p>
-            <div class="code-block">RUN apt-get update && apt-get install -y --no-install-recommends <package_name>=<version> && apt-get clean && rm -rf /var/lib/apt/lists/*</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>Pinning package versions and cleaning caches ensures a predictable, hardened, and minimal system configuration, aligning with secure configuration management principles.</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">Unpinned package versions could be updated to include exploitable vulnerabilities, potentially compromising sensitive payment transaction data or disrupting critical financial services.</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>Pin all apt/apk package versions. Clean package manager caches after installation. Do not install unnecessary packages.</p>
+          <div class="code-block"># See NRB remediation guidance</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>Addresses Section 6.2 - Secure Configuration Management</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">Non-compliance with NRB ICT Security Guidelines</div>
         </div>
       </div>
     </div>
@@ -615,90 +912,34 @@ RUN apt-get update && apt-get upgrade -y --no-install-recommends && apt-get clea
   </div>
   
 
-  <!-- AI EXECUTIVE NARRATIVE -->
   
   <div class="section">
-    <div class="section-title">AI Executive Compliance Narrative</div>
-    <div class="narrative-box">**Security Assessment Report: Container Image `fintech-bad`**
+    <div class="section-head"><h2>AI Executive Compliance Narrative</h2></div>
+    <div class="narrative">**NRB Compliance Report**
 
-**Date:** October 26, 2023
+**Executive Summary**
+Our Nepali fintech startup has achieved an NRB Compliance Score of 59.6%, indicating a moderate level of adherence to regulatory requirements. However, our review revealed several critical vulnerabilities and failed controls that pose significant risks to the organization.
 
-**Prepared For:** [Fintech Startup Name] Management
-**Prepared By:** [Your Name/Department], Compliance Officer
+**Key Risks**
+The identified critical CVEs (1) and high CVEs (8) highlight the need for immediate attention. Failed NRB Controls include patch management, vulnerability assessment, access control, technology risk, secure configuration management, and privileged account management. These weaknesses can lead to data breaches, unauthorized access, and reputational damage.
 
----
+**Top 3 Actions**
+To address these risks, we recommend:
 
-**1. Executive Summary**
+1. Implementing a robust patch management process to ensure timely updates.
+2. Conducting regular vulnerability assessments and implementing remediation measures.
+3. Reviewing and enhancing our access control policies to ensure least privilege principles are followed.
 
-This report details the security posture of the container image `fintech-bad` based on automated scans. The image presents significant security weaknesses, including critical vulnerabilities and multiple failed controls, indicating it is **not safe to deploy** in a production environment, especially for a regulated payment processing service. Urgent remediation is required to meet Nepal Rastra Bank (NRB) compliance standards.
-
-**2. Compliance Status**
-
-The automated container image scan for `fintech-bad` identified several areas of non-compliance with relevant Nepal Rastra Bank (NRB) guidelines.
-
-**Failed Controls:**
-
-*   **Section 6.4 - Patch Management:** The image lacks up-to-date security patches, leaving it susceptible to known exploits.
-*   **Section 6.5 - Vulnerability Assessment:** The presence of critical and high vulnerabilities suggests inadequate or absent regular vulnerability scanning.
-*   **Section 5.1 - Access Control and Least Privilege:** The image appears to grant excessive permissions, violating the principle of least privilege.
-*   **Section 4.4 - Technology Risk:** Significant unaddressed vulnerabilities indicate a failure to manage technological risks effectively.
-*   **Section 6.2 - Secure Configuration Management:** The image likely contains insecure default configurations or misconfigurations.
-
-**Passed Controls:**
-
-*   **Section 5.3 - Privileged Account Management:** Controls for managing privileged accounts are satisfactory.
-*   **Section 7.1 - Network Security:** Network security configurations appear to be compliant.
-*   **Section 4.2 - Secure Communication:** Secure communication protocols are in place.
-*   **Section 3.1 - Credential Management:** Credential management practices are compliant.
-*   **Section 5.6 - Cryptographic Controls:** Cryptographic mechanisms meet requirements.
-*   **Section 9.2 - Third Party and Supply Chain Risk:** Controls related to third-party and supply chain risks are satisfactory.
-*   **Section 8.1 - Audit Logging and Monitoring:** Audit logging and monitoring capabilities are compliant.
-
-**3. Key Risk Areas**
-
-For a Nepali payment processing company, the identified issues in `fintech-bad` translate to substantial business risks:
-
-*   **Data Breach and Financial Loss (Critical Vulnerabilities):** The presence of one critical and eight high Common Vulnerabilities and Exposures (CVEs) means attackers could exploit these flaws to gain unauthorized access to sensitive customer data (e.g., card details, personal information) or directly manipulate financial transactions. This could lead to significant monetary losses, regulatory fines from NRB, and severe reputational damage.
-*   **Operational Disruption and Service Interruption:** Exploited vulnerabilities could lead to system crashes, data corruption, or denial-of-service attacks. For a payment processor, any downtime directly impacts revenue and erodes customer trust, potentially causing users to switch to competitors.
-*   **Regulatory Penalties and Loss of License:** NRB mandates strict security controls for financial institutions. Failure to comply, especially concerning fundamental areas like patch management and vulnerability assessment, could result in hefty fines, operational restrictions, or even the revocation of the operating license, effectively shutting down the business.
-*   **Compromised Integrity of Transactions:** Insecure configurations and insufficient access controls mean that transaction data could be altered, leading to fraudulent activities or incorrect processing, further damaging customer trust and potentially leading to legal liabilities.
-
-**4. Recommended Actions**
-
-The following actions are prioritized to address the identified security gaps and bring the container image into compliance with NRB requirements.
-
-1.  **Immediately Address Critical and High Vulnerabilities:**
-    *   **Action:** Prioritize patching and updating all software packages within the container image to eliminate the 1 critical CVE and 8 high CVEs. This may involve upgrading libraries, operating system components, or application dependencies.
-    *   **Rationale:** This is the most immediate threat and directly addresses NRB's expectations under **Section 6.5 - Vulnerability Assessment** and implicitly **Section 4.4 - Technology Risk**.
-
-2.  **Implement Robust Patch Management:**
-    *   **Action:** Establish and enforce a regular schedule for scanning for and applying security patches to all deployed container images and their underlying components. Automate this process where feasible.
-    *   **Rationale:** This directly fulfills the requirements of **Section 6.4 - Patch Management**.
-
-3.  **Strengthen Access Control and Least Privilege:**
-    *   **Action:** Review and restrict the permissions of all processes and users running within the container. Ensure that only the absolute minimum necessary privileges are granted for each component to perform its function.
-    *   **Rationale:** This is crucial for meeting **Section 5.1 - Access Control and Least Privilege**.
-
-4.  **Conduct Comprehensive Secure Configuration Review:**
-    *   **Action:** Audit and harden all configurations of the operating system, runtime environment, and application within the container. Remove unnecessary services and disable insecure defaults.
-    *   **Rationale:** This directly addresses **Section 6.2 - Secure Configuration Management** and supports **Section 4.4 - Technology Risk**.
-
-5.  **Formalize Vulnerability Assessment Processes:**
-    *   **Action:** Integrate automated vulnerability scanning into the CI/CD pipeline to identify and remediate vulnerabilities before deployment. Define clear thresholds for acceptable risk and remediation timelines.
-    *   **Rationale:** This ensures ongoing compliance with **Section 6.5 - Vulnerability Assessment**.
-
-**5. Conclusion**
-
-The container image `fintech-bad` demonstrably fails to meet the security and compliance requirements stipulated by Nepal Rastra Bank for deployment in a payment processing environment. The identified critical and high vulnerabilities, coupled with failures in essential controls such as Patch Management, Vulnerability Assessment, Access Control, and Secure Configuration, present unacceptable risks. Therefore, this container image **does not meet NRB requirements for deployment** and must undergo significant remediation as outlined above before it can be considered for production use.</div>
+**Conclusion**
+While our compliance score is below par, we acknowledge the efforts made to address these issues. By prioritizing these top 3 actions, we aim to improve our NRB Compliance Score and mitigate potential risks to the organization. Regular monitoring and review will be essential to maintain a strong compliance posture.</div>
   </div>
   
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-  NRB Container Compliance Pipeline &mdash;
-  BSc Cybersecurity and Ethical Hacking Thesis &mdash;
+  <strong>NRBShield</strong> — Container Security &amp; NRB Compliance Pipeline &nbsp;·&nbsp;
+  BSc (Hons) Cybersecurity &amp; Ethical Hacking Thesis &nbsp;·&nbsp;
   Kathmandu, Nepal
 </div>
 

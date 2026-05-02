@@ -1,7 +1,8 @@
+import os
 import json
 
 # Load NRB controls from the mapping file
-with open("nrb_controls.json") as f:
+with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "nrb_controls.json")) as f:
     NRB_CONTROLS = json.load(f)["controls"]
 
 def extract_flags(trivy_data, hadolint_data, dockle_data):

@@ -7,7 +7,8 @@ from datetime import datetime
 def run_trivy(image_name):
     """Run Trivy CVE scan on a Docker image."""
     print(f"  [*] Running Trivy CVE scan on {image_name}...")
-    output_file = f"results/trivy_{image_name}.json"
+    safe_name = image_name.replace("/", "_").replace(":", "_")
+    output_file = f"results/trivy_{safe_name}.json"
     subprocess.run(
         ["trivy", "image", "--format", "json", "--output", output_file, 
          "--timeout", "5m", image_name],
@@ -41,7 +42,7 @@ def run_dockle(image_name):
     import re
     print(f"  [*] Running Dockle CIS checks on {image_name}...")
     result = subprocess.run(
-        ["dockle", "--format", "json", image_name],
+        ["dockle", "--format", "json", "--no-registry", image_name],
         capture_output=True, text=True
     )
     output = (result.stdout + result.stderr).strip()
@@ -116,7 +117,8 @@ def run_pipeline(image_name, dockerfile_path):
     report_data["ai_narrative"] = generate_executive_report(report_data)
 
     # Save raw JSON for reference
-    raw_output = f"results/raw_{image_name}.json"
+    safe_name = image_name.replace("/", "_").replace(":", "_")
+    raw_output = f"results/raw_{safe_name}.json"
     with open(raw_output, "w") as f:
         json.dump(report_data, f, indent=2)
 
@@ -126,7 +128,8 @@ def run_pipeline(image_name, dockerfile_path):
 
     score = nrb_compliance["compliance_score"]
     print(f"\n  [+] Done. NRB Compliance Score: {score}%")
-    print(f"  [+] Report saved to results/report_{image_name}.html")
+    safe_img = image_name.replace("/", "_").replace(":", "_")
+    print(f"  [+] Report saved to results/report_{safe_img}.html")
     return report_data
 
 if __name__ == "__main__":

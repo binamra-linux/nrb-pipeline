@@ -3,272 +3,170 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NRB Compliance Report — {{ image }}</title>
+<title>NRBShield — {{ image }}</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; }
-
-  .header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: white; padding: 40px;
-    border-bottom: 4px solid #e94560;
-  }
-  .header h1 { font-size: 1.8em; margin-bottom: 8px; }
-  .header .subtitle { opacity: 0.8; font-size: 0.95em; }
-  .header .meta { margin-top: 15px; opacity: 0.7; font-size: 0.85em; }
-
-  .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
-
-  /* Score Card */
-  .score-section {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 25px; margin-bottom: 30px;
-  }
-  .score-card {
-    background: white; border-radius: 16px;
-    padding: 35px; text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .score-number {
-    font-size: 4.5em; font-weight: 700; line-height: 1;
-    margin-bottom: 8px;
-  }
-  .score-label { font-size: 0.95em; color: #666; margin-bottom: 15px; }
-  .score-badge {
-    display: inline-block; padding: 6px 18px;
-    border-radius: 20px; font-weight: 600; font-size: 0.9em;
-  }
-  .score-red    { color: #e74c3c; }
-  .score-amber  { color: #f39c12; }
-  .score-green  { color: #27ae60; }
-  .badge-red    { background: #fdecea; color: #e74c3c; }
-  .badge-amber  { background: #fef9e7; color: #f39c12; }
-  .badge-green  { background: #eafaf1; color: #27ae60; }
-
-  /* CVE Stats */
-  .cve-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-  }
-  .cve-card {
-    background: white; border-radius: 12px;
-    padding: 20px; text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .cve-card .count { font-size: 2.5em; font-weight: 700; }
-  .cve-card .label { font-size: 0.8em; color: #666; margin-top: 4px; }
-  .cve-critical { border-top: 4px solid #e74c3c; }
-  .cve-high     { border-top: 4px solid #e67e22; }
-  .cve-medium   { border-top: 4px solid #f1c40f; }
-  .cve-low      { border-top: 4px solid #2ecc71; }
-  .cve-critical .count { color: #e74c3c; }
-  .cve-high     .count { color: #e67e22; }
-  .cve-medium   .count { color: #f1c40f; }
-  .cve-low      .count { color: #2ecc71; }
-
-  /* Section headings */
-  .section { margin-bottom: 30px; }
-  .section-title {
-    font-size: 1.2em; font-weight: 700;
-    margin-bottom: 15px; padding-bottom: 10px;
-    border-bottom: 2px solid #e94560;
-    color: #1a1a2e;
-  }
-
-  /* NRB Controls Table */
-  .controls-table {
-    width: 100%; border-collapse: collapse;
-    background: white; border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  }
-  .controls-table th {
-    background: #1a1a2e; color: white;
-    padding: 14px 16px; text-align: left;
-    font-size: 0.85em; text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .controls-table td {
-    padding: 14px 16px;
-    border-bottom: 1px solid #f0f2f5;
-    font-size: 0.9em; vertical-align: top;
-  }
-  .controls-table tr:last-child td { border-bottom: none; }
-  .controls-table tr:hover td { background: #f8f9ff; }
-
-  .status-pass {
-    display: inline-block; padding: 4px 12px;
-    background: #eafaf1; color: #27ae60;
-    border-radius: 20px; font-weight: 600; font-size: 0.85em;
-  }
-  .status-fail {
-    display: inline-block; padding: 4px 12px;
-    background: #fdecea; color: #e74c3c;
-    border-radius: 20px; font-weight: 600; font-size: 0.85em;
-  }
-  .weight-badge {
-    display: inline-block; padding: 3px 10px;
-    background: #eef2ff; color: #4a6cf7;
-    border-radius: 10px; font-size: 0.8em; font-weight: 600;
-  }
-  .violation-tag {
-    display: inline-block; padding: 2px 8px;
-    background: #fff3cd; color: #856404;
-    border-radius: 6px; font-size: 0.78em;
-    margin: 2px; font-family: monospace;
-  }
-
-  /* AI Advisories */
-  .advisory-card {
-    background: white; border-radius: 12px;
-    margin-bottom: 20px; overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    border-left: 5px solid #e94560;
-  }
-  .advisory-header {
-    background: #f8f9ff; padding: 15px 20px;
-    border-bottom: 1px solid #eee;
-    display: flex; justify-content: space-between;
-    align-items: center;
-  }
-  .advisory-header .clause {
-    font-weight: 600; color: #1a1a2e; font-size: 0.95em;
-  }
-  .advisory-header .doc-badge {
-    font-size: 0.78em; padding: 3px 10px;
-    background: #e8eaf6; color: #3949ab;
-    border-radius: 10px;
-  }
-  .advisory-body { padding: 20px; }
-  .advisory-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px; margin-top: 15px;
-  }
-  .advisory-item h4 {
-    font-size: 0.8em; text-transform: uppercase;
-    color: #888; margin-bottom: 6px; letter-spacing: 0.5px;
-  }
-  .advisory-item p { font-size: 0.9em; color: #333; line-height: 1.5; }
-  .code-block {
-    background: #1a1a2e; color: #a8ff78;
-    padding: 12px 16px; border-radius: 8px;
-    font-family: monospace; font-size: 0.85em;
-    white-space: pre-wrap; margin-top: 6px;
-  }
-  .risk-box {
-    background: #fdecea; border-radius: 8px;
-    padding: 12px 16px; margin-top: 6px;
-    font-size: 0.88em; color: #c0392b; line-height: 1.5;
-  }
-
-  /* Executive Narrative */
-  .narrative-box {
-    background: white; border-radius: 12px;
-    padding: 30px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    line-height: 1.8; font-size: 0.95em; color: #333;
-    white-space: pre-wrap;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center; padding: 30px;
-    color: #999; font-size: 0.85em;
-    border-top: 1px solid #e0e0e0; margin-top: 20px;
-  }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:#0d1117; --bg2:#161b22; --bg3:#21262d; --border:#30363d;
+  --text:#e6edf3; --muted:#8b949e; --blue:#58a6ff; --green:#3fb950;
+  --yellow:#e3b341; --red:#f85149; --orange:#d29922; --purple:#bc8cff; --accent:#e94560;
+}
+body { font-family:'Segoe UI',system-ui,Arial,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; font-size:14px; }
+.nav { background:var(--bg2); border-bottom:1px solid var(--border); padding:14px 32px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+.nav-logo { font-size:1.3em; font-weight:800; color:var(--blue); letter-spacing:-0.5px; }
+.nav-logo span { color:var(--accent); }
+.nav-tag { background:var(--bg3); color:var(--muted); font-size:0.75em; padding:3px 10px; border-radius:20px; border:1px solid var(--border); }
+.nav-right { margin-left:auto; color:var(--muted); font-size:0.82em; }
+.wrap { max-width:1280px; margin:0 auto; padding:28px 24px; }
+.hero { background:linear-gradient(135deg,#0d1117 0%,#161b22 60%,#1a1f2e 100%); border:1px solid var(--border); border-radius:16px; padding:32px; margin-bottom:24px; display:grid; grid-template-columns:1fr auto; gap:24px; align-items:center; }
+.hero-image { font-size:1.6em; font-weight:700; word-break:break-all; margin-bottom:6px; }
+.hero-meta { color:var(--muted); font-size:0.85em; display:flex; gap:20px; flex-wrap:wrap; }
+.hero-score { font-size:4em; font-weight:800; line-height:1; }
+.hero-score-label { font-size:0.78em; color:var(--muted); margin-top:4px; text-transform:uppercase; letter-spacing:1px; }
+.hero-badge { display:inline-block; margin-top:10px; padding:5px 16px; border-radius:20px; font-size:0.82em; font-weight:700; }
+.c-green{color:var(--green);} .bg-green{background:#033a16;color:var(--green);border:1px solid #238636;}
+.c-amber{color:var(--yellow);} .bg-amber{background:#272115;color:var(--yellow);border:1px solid #9e6a03;}
+.c-red{color:var(--red);} .bg-red{background:#3d0000;color:var(--red);border:1px solid #b91c1c;}
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px; }
+.stat { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+.stat-num { font-size:1.9em; font-weight:800; line-height:1; }
+.stat-lbl { font-size:0.75em; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; margin-top:2px; }
+.stat-crit{border-top:3px solid var(--red);} .stat-high{border-top:3px solid var(--orange);} .stat-med{border-top:3px solid var(--yellow);} .stat-low{border-top:3px solid var(--muted);}
+.section { margin-bottom:28px; }
+.section-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border); }
+.section-head h2 { font-size:0.95em; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--muted); }
+.section-head .count { background:var(--bg3); color:var(--muted); font-size:0.78em; padding:2px 8px; border-radius:10px; }
+.tbl { width:100%; border-collapse:collapse; background:var(--bg2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.tbl th { background:var(--bg3); padding:10px 14px; text-align:left; font-size:0.75em; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:600; }
+.tbl td { padding:12px 14px; border-bottom:1px solid var(--bg3); font-size:0.88em; vertical-align:top; }
+.tbl tr:last-child td { border-bottom:none; }
+.tbl tr:hover td { background:#1c2128; }
+.pill { display:inline-block; padding:3px 10px; border-radius:12px; font-size:0.78em; font-weight:700; }
+.pill-pass{background:#033a16;color:var(--green);} .pill-fail{background:#3d0000;color:var(--red);}
+.vtag { display:inline-block; background:#1f2d3d; color:#79c0ff; padding:2px 7px; border-radius:4px; font-size:0.75em; font-family:monospace; margin:2px; }
+.progress-wrap { background:var(--bg3); border-radius:4px; height:6px; margin-top:6px; overflow:hidden; }
+.progress-bar { height:100%; border-radius:4px; }
+.sev-badge { display:inline-block; padding:2px 9px; border-radius:6px; font-size:0.75em; font-weight:700; text-transform:uppercase; }
+.sev-CRITICAL{background:#3d0000;color:var(--red);} .sev-HIGH{background:#2d1a00;color:var(--orange);}
+.sev-MEDIUM{background:#2d2200;color:var(--yellow);} .sev-LOW{background:#1a1a1a;color:var(--muted);}
+.cve-id { font-family:monospace; font-size:0.82em; color:var(--blue); }
+.pkg    { font-family:monospace; font-size:0.82em; color:var(--purple); }
+.fix-yes{color:var(--green);font-size:0.8em;} .fix-no{color:var(--muted);font-size:0.8em;}
+.hl-card { background:var(--bg2); border:1px solid var(--border); border-left:3px solid var(--yellow); border-radius:10px; padding:14px 18px; margin-bottom:10px; display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:start; }
+.hl-code { font-family:monospace; font-size:0.82em; background:var(--bg3); color:var(--yellow); padding:3px 8px; border-radius:6px; white-space:nowrap; }
+.hl-msg  { font-size:0.88em; line-height:1.5; }
+.hl-line { font-size:0.78em; color:var(--muted); white-space:nowrap; }
+.ai-card { background:var(--bg2); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:12px; margin-bottom:16px; overflow:hidden; }
+.ai-card-head { background:var(--bg3); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; gap:12px; }
+.ai-card-head .clause { font-weight:700; color:var(--blue); font-size:0.9em; }
+.doc-pill { background:var(--bg2); color:var(--muted); font-size:0.75em; padding:3px 10px; border-radius:10px; border:1px solid var(--border); white-space:nowrap; }
+.ai-card-body { padding:18px; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.ai-item h4 { font-size:0.72em; text-transform:uppercase; color:var(--muted); letter-spacing:0.8px; margin-bottom:6px; }
+.ai-item p  { font-size:0.87em; line-height:1.6; }
+.code-block { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:10px 14px; font-family:monospace; font-size:0.8em; color:#79c0ff; white-space:pre-wrap; margin-top:6px; line-height:1.6; }
+.risk-box   { background:#1a0a0a; border:1px solid #5a1a1a; border-radius:6px; padding:10px 14px; font-size:0.85em; color:#f87171; margin-top:6px; line-height:1.6; }
+.vtag-sm    { font-family:monospace; font-size:0.75em; color:var(--muted); background:var(--bg3); padding:1px 6px; border-radius:4px; }
+.narrative  { background:var(--bg2); border:1px solid var(--border); border-radius:12px; padding:26px; line-height:1.9; font-size:0.9em; color:#c9d1d9; white-space:pre-wrap; }
+.footer { text-align:center; padding:28px; color:var(--muted); font-size:0.8em; border-top:1px solid var(--border); margin-top:12px; }
+.footer strong { color:var(--blue); }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <h1>NRB Container Compliance Report</h1>
-  <div class="subtitle">Nepal Rastra Bank ICT Security Guidelines — Container Image Assessment</div>
-  <div class="meta">
-    Image: <strong>{{ image }}</strong> &nbsp;|&nbsp;
-    Scanned: <strong>{{ scan_time }}</strong>
-  </div>
-</div>
+<nav class="nav">
+  <div class="nav-logo">NRB<span>Shield</span></div>
+  <span class="nav-tag">Container Compliance Pipeline</span>
+  <div class="nav-right">Kathmandu, Nepal &nbsp;·&nbsp; BSc Cybersecurity &amp; Ethical Hacking</div>
+</nav>
 
-<div class="container">
+<div class="wrap">
 
-  <!-- SCORE + CVE SUMMARY -->
-  <div class="score-section">
-
-    <!-- Compliance Score -->
-    <div class="score-card">
+  <div class="hero">
+    <div>
+      <div class="hero-image">{{ image }}</div>
+      <div class="hero-meta">
+        <span>Scanned: {{ scan_time }}</span>
+        <span>Nepal Rastra Bank ICT Security Guidelines</span>
+        <span>{{ nrb_compliance.controls | length }} Controls Evaluated</span>
+      </div>
+    </div>
+    <div style="text-align:center">
       {% set score = nrb_compliance.compliance_score %}
       {% if score >= 80 %}
-        <div class="score-number score-green">{{ score }}%</div>
-        <div class="score-label">NRB Compliance Score</div>
-        <span class="score-badge badge-green">COMPLIANT</span>
+        <div class="hero-score c-green">{{ score }}%</div>
+        <div class="hero-score-label">NRB Compliance Score</div>
+        <span class="hero-badge bg-green">✓ COMPLIANT</span>
       {% elif score >= 50 %}
-        <div class="score-number score-amber">{{ score }}%</div>
-        <div class="score-label">NRB Compliance Score</div>
-        <span class="score-badge badge-amber">PARTIAL</span>
+        <div class="hero-score c-amber">{{ score }}%</div>
+        <div class="hero-score-label">NRB Compliance Score</div>
+        <span class="hero-badge bg-amber">⚠ PARTIAL</span>
       {% else %}
-        <div class="score-number score-red">{{ score }}%</div>
-        <div class="score-label">NRB Compliance Score</div>
-        <span class="score-badge badge-red">NON-COMPLIANT</span>
+        <div class="hero-score c-red">{{ score }}%</div>
+        <div class="hero-score-label">NRB Compliance Score</div>
+        <span class="hero-badge bg-red">✗ NON-COMPLIANT</span>
       {% endif %}
-    </div>
-
-    <!-- CVE Counts -->
-    <div class="cve-grid">
-      <div class="cve-card cve-critical">
-        <div class="count">{{ cve_counts.CRITICAL }}</div>
-        <div class="label">CRITICAL CVEs</div>
-      </div>
-      <div class="cve-card cve-high">
-        <div class="count">{{ cve_counts.HIGH }}</div>
-        <div class="label">HIGH CVEs</div>
-      </div>
-      <div class="cve-card cve-medium">
-        <div class="count">{{ cve_counts.MEDIUM }}</div>
-        <div class="label">MEDIUM CVEs</div>
-      </div>
-      <div class="cve-card cve-low">
-        <div class="count">{{ cve_counts.LOW }}</div>
-        <div class="label">LOW CVEs</div>
-      </div>
     </div>
   </div>
 
-  <!-- NRB CONTROLS TABLE -->
+  <div class="stats">
+    <div class="stat stat-crit">
+      <div style="font-size:1.8em">🔴</div>
+      <div><div class="stat-num c-red">{{ cve_counts.CRITICAL }}</div><div class="stat-lbl">Critical CVEs</div></div>
+    </div>
+    <div class="stat stat-high">
+      <div style="font-size:1.8em">🟠</div>
+      <div><div class="stat-num" style="color:var(--orange)">{{ cve_counts.HIGH }}</div><div class="stat-lbl">High CVEs</div></div>
+    </div>
+    <div class="stat stat-med">
+      <div style="font-size:1.8em">🟡</div>
+      <div><div class="stat-num c-amber">{{ cve_counts.MEDIUM }}</div><div class="stat-lbl">Medium CVEs</div></div>
+    </div>
+    <div class="stat stat-low">
+      <div style="font-size:1.8em">⚪</div>
+      <div><div class="stat-num" style="color:var(--muted)">{{ cve_counts.LOW }}</div><div class="stat-lbl">Low CVEs</div></div>
+    </div>
+  </div>
+
   <div class="section">
-    <div class="section-title">NRB Control Compliance Status</div>
-    <table class="controls-table">
+    <div class="section-head">
+      <h2>NRB Control Compliance Status</h2>
+      <span class="count">
+        {{ nrb_compliance.controls | selectattr("compliant") | list | length }} passed /
+        {{ nrb_compliance.controls | rejectattr("compliant") | list | length }} failed
+      </span>
+    </div>
+    <table class="tbl">
       <thead>
         <tr>
-          <th>Control ID</th>
-          <th>NRB Clause</th>
-          <th>Document</th>
-          <th>Status</th>
-          <th>Weight</th>
-          <th>Violations Found</th>
+          <th>ID</th><th>NRB Clause</th><th>Document</th>
+          <th>Weight</th><th>Status</th><th>Violations</th><th>Remediation Hint</th>
         </tr>
       </thead>
       <tbody>
-        {% for control in nrb_compliance.controls %}
+        {% for c in nrb_compliance.controls %}
         <tr>
-          <td><strong>{{ control.id }}</strong></td>
-          <td>{{ control.nrb_clause }}</td>
-          <td><small>{{ control.nrb_document }}</small></td>
+          <td><strong style="color:var(--blue)">{{ c.id }}</strong></td>
           <td>
-            {% if control.compliant %}
-              <span class="status-pass">PASS</span>
-            {% else %}
-              <span class="status-fail">FAIL</span>
-            {% endif %}
+            {{ c.nrb_clause }}
+            <div style="color:var(--muted);font-size:0.78em;margin-top:3px">{{ c.description[:80] }}...</div>
           </td>
-          <td><span class="weight-badge">{{ control.severity_weight }}/10</span></td>
+          <td><span style="color:var(--muted);font-size:0.8em">{{ c.nrb_document }}</span></td>
           <td>
-            {% for v in control.violations %}
-              <span class="violation-tag">{{ v }}</span>
-            {% endfor %}
+            <div style="font-weight:700">{{ c.severity_weight }}/10</div>
+            <div class="progress-wrap" style="width:56px">
+              <div class="progress-bar" style="width:{{ c.severity_weight * 10 }}%;background:{% if c.severity_weight >= 9 %}var(--red){% elif c.severity_weight >= 7 %}var(--yellow){% else %}var(--green){% endif %}"></div>
+            </div>
+          </td>
+          <td>
+            {% if c.compliant %}<span class="pill pill-pass">✓ PASS</span>
+            {% else %}<span class="pill pill-fail">✗ FAIL</span>{% endif %}
+          </td>
+          <td>
+            {% for v in c.violations %}<span class="vtag">{{ v }}</span>
+            {% else %}<span style="color:var(--green);font-size:0.82em">None</span>{% endfor %}
+          </td>
+          <td style="font-size:0.8em;color:var(--muted);max-width:180px">
+            {% if not c.compliant %}{{ c.remediation_hint[:70] }}...{% else %}—{% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -276,30 +174,77 @@
     </table>
   </div>
 
-  <!-- AI REMEDIATION ADVISORIES -->
+  {% if cve_list %}
+  <div class="section">
+    <div class="section-head">
+      <h2>Vulnerabilities Found</h2>
+      <span class="count">{{ cve_list | length }} shown</span>
+    </div>
+    <table class="tbl">
+      <thead>
+        <tr><th>CVE ID</th><th>Package</th><th>Severity</th><th>Description</th><th>Fix Available</th></tr>
+      </thead>
+      <tbody>
+        {% for cve in cve_list %}
+        <tr>
+          <td><span class="cve-id">{{ cve.id }}</span></td>
+          <td><span class="pkg">{{ cve.package }}</span></td>
+          <td><span class="sev-badge sev-{{ cve.severity }}">{{ cve.severity }}</span></td>
+          <td style="max-width:340px;font-size:0.85em;color:var(--muted)">{{ cve.title }}</td>
+          <td>
+            {% if cve.fixed_version and cve.fixed_version != "Not available" %}
+              <span class="fix-yes">✓ {{ cve.fixed_version }}</span>
+            {% else %}<span class="fix-no">No fix yet</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  {% if hadolint %}
+  <div class="section">
+    <div class="section-head">
+      <h2>Dockerfile Issues</h2>
+      <span class="count">{{ hadolint | length }} issues</span>
+    </div>
+    {% for h in hadolint %}
+    <div class="hl-card">
+      <span class="hl-code">{{ h.code }}</span>
+      <div class="hl-msg"><strong style="color:var(--yellow)">{{ h.code }}</strong> — {{ h.message }}</div>
+      <span class="hl-line">Line {{ h.line }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   {% if ai_advisories %}
   <div class="section">
-    <div class="section-title">AI-Generated Remediation Advisories</div>
+    <div class="section-head">
+      <h2>AI Remediation Advisories</h2>
+      <span class="count">{{ ai_advisories | length }} advisories</span>
+    </div>
     {% for item in ai_advisories %}
-    <div class="advisory-card">
-      <div class="advisory-header">
+    <div class="ai-card">
+      <div class="ai-card-head">
         <span class="clause">{{ item.nrb_id }} — {{ item.nrb_clause }}</span>
-        <span class="doc-badge">{{ item.nrb_document }}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span class="vtag-sm">{{ item.violation }}</span>
+          <span class="doc-pill">{{ item.nrb_document }}</span>
+        </div>
       </div>
-      <div class="advisory-body">
-        <small style="color:#888;">Violation: <code>{{ item.violation }}</code></small>
-        <div class="advisory-grid">
-          <div class="advisory-item">
-            <h4>Immediate Fix</h4>
-            <p>{{ item.advisory.immediate_fix }}</p>
-            <div class="code-block">{{ item.advisory.code_example }}</div>
-          </div>
-          <div class="advisory-item">
-            <h4>NRB Justification</h4>
-            <p>{{ item.advisory.nrb_justification }}</p>
-            <h4 style="margin-top:15px;">Risk if Ignored</h4>
-            <div class="risk-box">{{ item.advisory.risk_if_ignored }}</div>
-          </div>
+      <div class="ai-card-body">
+        <div class="ai-item">
+          <h4>Immediate Fix</h4>
+          <p>{{ item.advisory.immediate_fix }}</p>
+          <div class="code-block">{{ item.advisory.code_example }}</div>
+        </div>
+        <div class="ai-item">
+          <h4>NRB Justification</h4>
+          <p>{{ item.advisory.nrb_justification }}</p>
+          <h4 style="margin-top:14px">Risk if Ignored</h4>
+          <div class="risk-box">{{ item.advisory.risk_if_ignored }}</div>
         </div>
       </div>
     </div>
@@ -307,20 +252,18 @@
   </div>
   {% endif %}
 
-  <!-- AI EXECUTIVE NARRATIVE -->
   {% if ai_narrative %}
   <div class="section">
-    <div class="section-title">AI Executive Compliance Narrative</div>
-    <div class="narrative-box">{{ ai_narrative }}</div>
+    <div class="section-head"><h2>AI Executive Compliance Narrative</h2></div>
+    <div class="narrative">{{ ai_narrative }}</div>
   </div>
   {% endif %}
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
-  NRB Container Compliance Pipeline &mdash;
-  BSc Cybersecurity and Ethical Hacking Thesis &mdash;
+  <strong>NRBShield</strong> — Container Security &amp; NRB Compliance Pipeline &nbsp;·&nbsp;
+  BSc (Hons) Cybersecurity &amp; Ethical Hacking Thesis &nbsp;·&nbsp;
   Kathmandu, Nepal
 </div>
 

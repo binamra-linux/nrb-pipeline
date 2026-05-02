@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NRBShield — Container Compliance Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',Arial,sans-serif; background:#0d1117; color:#e6edf3; min-height:100vh; }
+
+.navbar {
+  background:#161b22; border-bottom:1px solid #30363d;
+  padding:16px 32px; display:flex; align-items:center; gap:16px;
+}
+.navbar .logo { font-size:1.4em; font-weight:700; color:#58a6ff; }
+.navbar .logo span { color:#e94560; }
+.navbar .subtitle { color:#8b949e; font-size:0.85em; }
+
+.container { max-width:1200px; margin:0 auto; padding:32px 20px; }
+
+/* Scan Box */
+.scan-box {
+  background:#161b22; border:1px solid #30363d;
+  border-radius:12px; padding:32px; margin-bottom:32px;
+}
+.scan-box h2 { font-size:1.1em; color:#8b949e; margin-bottom:20px; }
+.scan-input-row { display:flex; gap:12px; }
+.scan-input-row input {
+  flex:1; background:#0d1117; border:1px solid #30363d;
+  border-radius:8px; padding:12px 16px; color:#e6edf3;
+  font-size:1em; outline:none;
+}
+.scan-input-row input:focus { border-color:#58a6ff; }
+.scan-input-row input::placeholder { color:#484f58; }
+.btn-scan {
+  background:#238636; color:white; border:none;
+  border-radius:8px; padding:12px 28px; font-size:1em;
+  font-weight:600; cursor:pointer; transition:background 0.2s;
+}
+.btn-scan:hover { background:#2ea043; }
+.btn-scan:disabled { background:#21262d; color:#484f58; cursor:not-allowed; }
+
+/* Terminal log */
+.terminal {
+  background:#0d1117; border:1px solid #30363d;
+  border-radius:8px; padding:16px; margin-top:20px;
+  font-family:monospace; font-size:0.85em; color:#3fb950;
+  min-height:80px; max-height:200px; overflow-y:auto;
+  display:none;
+}
+.terminal.active { display:block; }
+.terminal .log-line { padding:2px 0; }
+.terminal .log-line.error { color:#f85149; }
+
+/* Score pill */
+.score-pill {
+  display:inline-block; padding:4px 14px;
+  border-radius:20px; font-weight:700; font-size:0.9em;
+}
+.score-green { background:#033a16; color:#3fb950; }
+.score-amber { background:#341a00; color:#e3b341; }
+.score-red   { background:#3d0000; color:#f85149; }
+
+/* History table */
+.section-title {
+  font-size:1em; font-weight:600; color:#8b949e;
+  margin-bottom:16px; text-transform:uppercase; letter-spacing:1px;
+}
+.scans-table {
+  width:100%; border-collapse:collapse;
+  background:#161b22; border:1px solid #30363d; border-radius:12px;
+  overflow:hidden;
+}
+.scans-table th {
+  background:#21262d; padding:12px 16px;
+  text-align:left; font-size:0.8em; color:#8b949e;
+  text-transform:uppercase; letter-spacing:0.5px;
+}
+.scans-table td {
+  padding:14px 16px; border-bottom:1px solid #21262d;
+  font-size:0.9em;
+}
+.scans-table tr:last-child td { border-bottom:none; }
+.scans-table tr:hover td { background:#1c2128; }
+.scans-table a { color:#58a6ff; text-decoration:none; }
+.scans-table a:hover { text-decoration:underline; }
+
+.cve-critical { color:#f85149; font-weight:700; }
+.cve-high     { color:#e3b341; font-weight:700; }
+
+.btn-compare {
+  background:#1f6feb; color:white; border:none;
+  border-radius:6px; padding:6px 14px; font-size:0.82em;
+  cursor:pointer; text-decoration:none; display:inline-block;
+}
+.btn-compare:hover { background:#388bfd; }
+
+.empty-state {
+  text-align:center; padding:60px 20px; color:#484f58;
+}
+.empty-state .icon { font-size:3em; margin-bottom:16px; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">NRB<span>Shield</span></div>
+  <div class="subtitle">Container Security & NRB Compliance Monitor — Kathmandu, Nepal</div>
+</nav>
+
+<div class="container">
+
+  <!-- Scan Box -->
+  <div class="scan-box">
+    <h2>Scan a Docker Image</h2>
+    <div class="scan-input-row">
+      <input type="text" id="imageInput"
+             placeholder="e.g. nginx:latest, fireflyiii/core, ubuntu:20.04"
+             autocomplete="off">
+      <button class="btn-scan" id="scanBtn" onclick="startScan()">
+        Scan Image
+      </button>
+    </div>
+    <div class="terminal" id="terminal"></div>
+  </div>
+
+  <!-- Scan History -->
+  <div class="section-title">Scan History</div>
+
+  {% if scans %}
+  <table class="scans-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Image</th>
+        <th>Scanned At</th>
+        <th>NRB Score</th>
+        <th>Critical</th>
+        <th>High</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="scansBody">
+      {% for s in scans %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td><strong>{{ s.image_name }}</strong></td>
+        <td>{{ s.scan_time }}</td>
+        <td>
+          {% if s.score >= 80 %}
+            <span class="score-pill score-green">{{ s.score }}%</span>
+          {% elif s.score >= 50 %}
+            <span class="score-pill score-amber">{{ s.score }}%</span>
+          {% else %}
+            <span class="score-pill score-red">{{ s.score }}%</span>
+          {% endif %}
+        </td>
+        <td class="cve-critical">{{ s.critical }}</td>
+        <td class="cve-high">{{ s.high }}</td>
+        <td>
+          <a href="/scan/{{ s.id }}">View</a> &nbsp;
+          <a href="/compare?id1={{ s.id }}" class="btn-compare">Compare</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <div class="icon">🔍</div>
+    <div>No scans yet. Enter a Docker image name above to get started.</div>
+  </div>
+  {% endif %}
+
+</div>
+
+<script>
+  const socket = io();
+  const terminal = document.getElementById("terminal");
+  const scanBtn  = document.getElementById("scanBtn");
+
+  function log(msg, isError=false) {
+    terminal.classList.add("active");
+    const line = document.createElement("div");
+    line.className = "log-line" + (isError ? " error" : "");
+    line.textContent = "> " + msg;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function startScan() {
+    const image = document.getElementById("imageInput").value.trim();
+    if (!image) { alert("Please enter an image name"); return; }
+
+    terminal.innerHTML = "";
+    terminal.classList.add("active");
+    scanBtn.disabled   = true;
+    scanBtn.textContent = "Scanning...";
+
+    socket.emit("start_scan", { image: image });
+  }
+
+  // Allow Enter key to trigger scan
+  document.getElementById("imageInput").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") startScan();
+  });
+
+  socket.on("log", function(data) {
+    log(data.msg);
+  });
+
+  socket.on("status", function(data) {
+    if (data.status === "done") {
+      scanBtn.disabled    = false;
+      scanBtn.textContent = "Scan Image";
+      log("Redirecting to results...");
+      setTimeout(() => location.reload(), 1500);
+    } else if (data.status === "error") {
+      scanBtn.disabled    = false;
+      scanBtn.textContent = "Scan Image";
+      log("Error: " + data.msg, true);
+    }
+  });
+</script>
+</body>
+</html>
